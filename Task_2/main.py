@@ -7,15 +7,16 @@ from dataclasses import dataclass
 argparser = argparse.ArgumentParser(
     prog="E-book metadata parser",
     description="Returns title, author, publisher and date published from a specified EPUB or FB2 file",
-    epilog="P.S. Developed as a part of a take-home assignment",
+    epilog="P.S. Developed as part of a take-home assignment",
 )
-argparser.add_argument("filename", help="Insert a file", nargs="+",) 
+argparser.add_argument("filename", help="Insert a file", nargs="+", type=lambda p: p if os.path.isabs(p) else os.path.abspath(p)) 
+# argparser.add_argument("-v", "--verbose", help="Displays additional information", required=False)
 
 args = argparser.parse_args()
-print(type(args.filename))
+print(args.filename)
 
 @dataclass
-class MetaDataClass:
+class BookMetaData:
     title: str | None = None
     author: str | None = None
     publisher: str | None = None
@@ -27,8 +28,6 @@ class MetaDataClass:
 
 def find_opf(folder: str) -> str:
     for root, folders, files in os.walk(folder):
-        if "OEBPS" not in root:
-            continue
         for file in files:
             filename, ext = os.path.splitext(file)
             if ext == ".opf":
@@ -36,7 +35,7 @@ def find_opf(folder: str) -> str:
 
 
 def parse_metadata(file, extension):
-    meta = MetaDataClass()
+    meta = BookMetaData()
     tree = ET.parse(file)
     root = tree.getroot()
     # print(root.tag)
@@ -59,10 +58,10 @@ def parse_metadata(file, extension):
 
 
 if __name__ == "__main__":
-    root, folders, files = next(os.walk(os.getcwd()))
-
     for file in args.filename:
-        name, extension = os.path.splitext(file)
+        absolute_path, extension = os.path.splitext(file)
+        name = os.path.basename(file)
+        root = os.path.dirname(file)
         folder_name = f".{name}"
         if extension in [".epub", ".fb2"]:
             os.makedirs(folder_name)
@@ -72,3 +71,5 @@ if __name__ == "__main__":
             metadata = parse_metadata(metadata_file, extension)
             shutil.rmtree(folder_name)
             print(metadata)
+
+
