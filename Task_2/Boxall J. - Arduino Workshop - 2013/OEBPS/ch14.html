@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg"><head><title>Chapter 14. Wireless Data</title><link rel="stylesheet" type="text/css" href="core.css"/><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"/><link rel="up" href="index.html" title="Arduino Workshop: A hands-on introduction with 65 projects"/><link rel="prev" href="ch13.html" title="Chapter 13. Using GPS with Your Arduino"/><link rel="next" href="ch15.html" title="Chapter 15. Infrared Remote Control"/></head><body><section class="chapter" title="Chapter 14. Wireless Data" epub:type="chapter" id="wireless_data"><div class="titlepage"><div><div><h2 class="title">Chapter 14. Wireless Data</h2></div></div></div><p>In this chapter you’ll learn how to send and receive instructions and data using various types of wireless transmission hardware. Specifically, you’ll learn how to</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>Send digital output signals using low-cost wireless modules</p></li><li class="listitem"><p>Create a simple and inexpensive wireless remote control system</p></li><li class="listitem"><p>Use XBee wireless data receivers and transceivers</p></li><li class="listitem"><p>Create a remote control temperature sensor</p></li></ul></div><div class="sect1" title="Using Low-cost Wireless Modules"><div class="titlepage"><div><div><h2 class="title" style="clear: both" id="using_low-cost_wireless_modules">Using Low-cost Wireless Modules</h2></div></div></div><p>It’s easy to send text information in one direction using a wireless link between two Arduino-controlled systems that have inexpensive radio frequency (RF) data modules, such as the transmitter module shown in <a class="xref" href="ch14.html#transmitter_rf_link_module" title="Figure 14-1. Transmitter RF Link module">Figure 14-1</a>. These modules are usually sold in pairs and are known as <span class="emphasis"><em>RF Link</em></span> modules or kits. Good examples are part WLS107B4B from Seeed Studio<span class="emphasis"><em/></span> and part WRL-10534 from SparkFun. We’ll use the most common module types that run on the 433 MHz radio frequency in our projects.</p><p><a id="iddle1428" class="indexterm"/><a id="iddle1430" class="indexterm"/><a id="iddle1571" class="indexterm"/>The connections shown at the bottom of the module in <a class="xref" href="ch14.html#transmitter_rf_link_module" title="Figure 14-1. Transmitter RF Link module">Figure 14-1</a> are, from left to right, 5 V, GND, data in, and an external antenna. The antenna can be a single length of wire, or it can be omitted entirely for short transmission distances. (Each brand of module can vary slightly, so check the connections on your particular device before moving forward.)</p><p><a class="xref" href="ch14.html#receiver_rf_link_module" title="Figure 14-2. Receiver RF Link module">Figure 14-2</a> shows the receiver module, which is slightly larger than the transmitter module.</p><div class="figure"><a id="transmitter_rf_link_module"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00249"/><img src="httpatomoreillycomsourcenostarchimages1630268.png.jpg" alt="Transmitter RF Link module"/></div></div><div class="figure-title">Figure 14-1. Transmitter RF Link module</div></div><div class="figure"><a id="receiver_rf_link_module"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00250"/><img src="httpatomoreillycomsourcenostarchimages1630270.png.jpg" alt="Receiver RF Link module"/></div></div><div class="figure-title">Figure 14-2. Receiver RF Link module</div></div><p>The connections on the receiver are straightforward: the V+ and V− pins connect to 5 V and GND, respectively, and DATA connects to the Arduino pin allocated to receive the data.</p><p>Before you can use these modules, you also need to download and install the latest version of the <span class="emphasis"><em>VirtualWire</em></span> library from <span class="emphasis"><em><a class="ulink" href="http://www.open.com.au/mikem/arduino/" target="_top">http://www.open.com.au/mikem/arduino/</a></em></span>. After you’ve installed the library, you’ll be ready to move on to the next section.</p><div class="note" title="Note"><h3 class="title"><a id="ch14note01"/>Note</h3><p><span class="emphasis"><em>The RF Link modules are inexpensive and easy to use, but they have no error-checking capability to ensure that data being sent is received correctly. Therefore, I recommend that you use them only for simple tasks such as this basic remote control project. If your project calls for more accurate and reliable data transmission, use something like the XBee modules instead, which are discussed later in this chapter.</em></span></p></div></div><div class="sect1" title="Project #47: Creating a Wireless Remote Control"><div class="titlepage"><div><div><h2 class="title" style="clear: both" id="project_hash47_creating_a_wireless_remot">Project #47: Creating a Wireless Remote Control</h2></div></div></div><p>We’ll remotely control two digital outputs: You’ll press buttons connected to one Arduino board to control matching digital output pins on another Arduino located some distance away. This project will show you how to use the RF Link modules and how to determine what sort of distance you can achieve remote control with the modules before you commit to using the modules for more complex tasks. (In open air, the distance you can achieve is generally about 100 meters, but the distance will be less when you are indoors or when the modules are between obstacles.)</p><div class="sect2" title="The Hardware for the Transmitter Circuit"><div class="titlepage"><div><div><h3 class="title" id="hardware_for_the_transmitter_circuit">The Hardware for the Transmitter Circuit</h3></div></div></div><p><a id="iddle1429" class="indexterm"/>The following hardware is required for the transmitter circuit:</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>Arduino and USB cable</p></li><li class="listitem"><p>One 9 V battery and DC socket cable (as used in <a class="xref" href="ch12.html" title="Chapter 12. Motors and Movement">Chapter 12</a>)</p></li><li class="listitem"><p>One 433 MHz RF Link transmitter module (such as SparkFun part number WRL-10534)</p></li><li class="listitem"><p>Two 10 kΩ resistors (R1 and R2)</p></li><li class="listitem"><p>Two 100 nF capacitors (C1 and C2)</p></li><li class="listitem"><p>Two push buttons</p></li><li class="listitem"><p>One breadboard</p></li></ul></div></div><div class="sect2" title="The Transmitter Schematic"><div class="titlepage"><div><div><h3 class="title" id="transmitter_schematic">The Transmitter Schematic</h3></div></div></div><p>The transmitter circuit consists of two push buttons with debounce circuitry connected to digital pins 2 and 3, and the transmitter module wired as described earlier, as shown in <a class="xref" href="ch14.html#transmitter_circuit_for_project_47" title="Figure 14-3. Transmitter circuit for Project 47">Figure 14-3</a>.</p><div class="figure"><a id="transmitter_circuit_for_project_47"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00251"/><img src="httpatomoreillycomsourcenostarchimages1630272.png.jpg" alt="Transmitter circuit for Project 47"/></div></div><div class="figure-title">Figure 14-3. Transmitter circuit for Project 47</div></div></div><div class="sect2" title="The Hardware for the Receiver Circuit"><div class="titlepage"><div><div><h3 class="title" id="hardware_for_the_receiver_circuit">The Hardware for the Receiver Circuit</h3></div></div></div><p><a id="iddle1561" class="indexterm"/>The following hardware is required for the receiver circuit:</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>Arduino and USB cable</p></li><li class="listitem"><p>One 9 V battery and DC socket cable (as used in <a class="xref" href="ch12.html" title="Chapter 12. Motors and Movement">Chapter 12</a>)</p></li><li class="listitem"><p>One 433 MHz RF Link receiver module (such as SparkFun part number WRL-10532)</p></li><li class="listitem"><p>One breadboard</p></li><li class="listitem"><p>Two LEDs of your choice</p></li><li class="listitem"><p>Two 560 Ω resistors (R1 and R2)</p></li></ul></div></div><div class="sect2" title="The Receiver Schematic"><div class="titlepage"><div><div><h3 class="title" id="receiver_schematic">The Receiver Schematic</h3></div></div></div><p>The receiver circuit consists of two LEDs on digital pins 6 and 7, and the data pin from the RF Link receiver module connected to digital pin 8, as shown in <a class="xref" href="ch14.html#receiver_circuit_for_project_47" title="Figure 14-4. Receiver circuit for Project 47">Figure 14-4</a>.</p><div class="figure"><a id="receiver_circuit_for_project_47"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00252"/><img src="httpatomoreillycomsourcenostarchimages1630274.png.jpg" alt="Receiver circuit for Project 47"/></div></div><div class="figure-title">Figure 14-4. Receiver circuit for Project 47</div></div><p><a id="iddle1025" class="indexterm"/>You can substitute the breadboard, LEDs, resistors, and receiver module with a Freetronics 433 MHz receiver shield, shown in <a class="xref" href="ch14.html#freetronics_433_mhz_receiver_shield" title="Figure 14-5. Freetronics 433 MHz receiver shield">Figure 14-5</a>.</p></div><div class="sect2" title="The Transmitter Sketch"><div class="titlepage"><div><div><h3 class="title" id="transmitter_sketch">The Transmitter Sketch</h3></div></div></div><p>Now let’s examine the sketch for the transmitter. Enter and upload the following sketch to the Arduino with the transmitter circuit:</p><div class="figure"><a id="freetronics_433_mhz_receiver_shield"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00253"/><img src="httpatomoreillycomsourcenostarchimages1630276.png.jpg" alt="Freetronics 433 MHz receiver shield"/></div></div><div class="figure-title">Figure 14-5. Freetronics 433 MHz receiver shield</div></div><a id="pro_id00139"/><pre class="programlisting">  // Project 47 - Creating a Wireless Remote Control, Transmitter Sketch
+
+<span class="gray-background">1</span> #include &lt;VirtualWire.h&gt;
+  uint8_t buf[VW_MAX_MESSAGE_LEN];
+  uint8_t buflen = VW_MAX_MESSAGE_LEN;
+
+<span class="gray-background">2</span> const char *on2 = "a";
+  const char *off2 = "b";
+  const char *on3 = "c";
+  const char *off3 = "d";
+
+  void setup()
+  {
+<span class="gray-background">3</span>     vw_set_ptt_inverted(true);      // Required for RF Link modules
+      vw_setup(300);                  // set data speed
+<span class="gray-background">4</span>     vw_set_tx_pin(8);
+      pinMode(2, INPUT);
+      pinMode(3, INPUT);
+  }
+
+  void loop()
+  {
+<span class="gray-background">5</span>   if (digitalRead(2)==HIGH)
+    {
+         vw_send((uint8_t *)on2, strlen(on2));  // send the data out to the world
+         vw_wait_tx();                          // wait a moment
+         delay(200);
+    }
+    if (digitalRead(2)==LOW)
+    {
+<span class="gray-background">6</span>        vw_send((uint8_t *)off2, strlen(off2));
+         vw_wait_tx();
+         delay(200);
+    }
+    if (digitalRead(3)==HIGH)
+    {
+         vw_send((uint8_t *)on3, strlen(on3));
+         vw_wait_tx();
+         delay(200);
+    }
+    if (digitalRead(3)==LOW)
+    {
+         vw_send((uint8_t *)off3, strlen(off3));
+         vw_wait_tx();
+         delay(200);
+    }
+   }</pre><p>To use the RF Link modules, we use the virtual wire functions at <span class="gray-background">1</span> and <span class="gray-background">3</span> in the sketch. At <span class="gray-background">4</span>, we set digital pin 8, which is used to connect the Arduino to the data pin of the transmitter module and to control the speed of the data transmission. (You can use any other digital pins if necessary, except 0 and 1, which would interfere with the serial line.)</p><p>The transmitter sketch reads the status of the two buttons connected to digital pins 2 and 3 and sends a single text character to the RF Link module that matches the state of the buttons. For example, when the button on digital pin 2 is <code class="literal">HIGH</code>, the Arduino sends the character <span class="emphasis"><em>a</em></span>, and when the button is <code class="literal">LOW</code>, it sends the character <span class="emphasis"><em>b</em></span>. The four states are declared starting at <span class="gray-background">2</span>.</p><p>The transmission of the text character is handled using one of the four sections’ <code class="literal">if</code> statements, starting at <span class="gray-background">5</span>—for example, the contents of the <code class="literal">if-then</code> statement at <span class="gray-background">6</span>. The variable transmitted is used twice—for example, <code class="literal">on2</code>, as shown here:</p><a id="pro_id00140"/><pre class="programlisting">vw_send((uint8_t *)on2, strlen(on2));</pre><p>The function <code class="literal">vw_send</code> sends the contents of the variable <code class="literal">on2</code>, but it needs to know the length of the variable in characters, so we use <code class="literal">strlen()</code> to accomplish this.</p></div><div class="sect2" title="The Receiver Sketch"><div class="titlepage"><div><div><h3 class="title" id="receiver_sketch">The Receiver Sketch</h3></div></div></div><p>Now let’s add the receiver sketch. Enter and upload the following sketch to the receiver circuit’s Arduino:</p><a id="pro_id00141"/><pre class="programlisting">  // Project 47 - Creating a Wireless Remote Control, Receiver Sketch
+  #include &lt;VirtualWire.h&gt;
+
+  uint8_t buf[VW_MAX_MESSAGE_LEN];
+  uint8_t buflen = VW_MAX_MESSAGE_LEN;
+
+  void setup()
+  {
+<span class="gray-background">1</span>   vw_set_ptt_inverted(true);    // Required for RF link modules
+    vw_setup(300);              
+<span class="gray-background">2</span>   vw_set_rx_pin(8);
+    vw_rx_start();
+    pinMode(6, OUTPUT);
+    pinMode(7, OUTPUT);
+  }
+
+  void loop()
+  {
+<span class="gray-background">3</span>   if (vw_get_message(buf, &amp;buflen))
+    {
+<span class="gray-background">4</span>     switch(buf[0])
+      {
+        case 'a':
+        digitalWrite(6, HIGH);
+        break;
+        case 'b':
+        digitalWrite(6, LOW);
+        break;
+        case 'c':
+        digitalWrite(7, HIGH);
+        break;
+        case 'd':
+        digitalWrite(7, LOW);
+        break;
+      }
+    }
+  }</pre><p><a id="iddle1575" class="indexterm"/>As with the transmitter circuit, we use the virtual wire functions at <span class="gray-background">1</span> to set up the RF Link receiver module, set the data speed, and set the Arduino digital pin to which the link’s data output pin is connected at <span class="gray-background">2</span>.</p><p>When the sketch is running, the characters sent from the transmitter circuit are received by the RF Link module and sent to the Arduino. The function <code class="literal">vw_get_message()</code> at <span class="gray-background">3</span> takes the characters received by the Arduino, which are interpreted by the <code class="literal">switch-case</code> function at <span class="gray-background">4</span>. For example, pressing button S1 on the transmitter circuit will send the character <span class="emphasis"><em>a</em></span>. This character is received by the transmitter, which sets digital pin 6 to <code class="literal">HIGH</code>, turning on the LED.</p><p>You can use this simple pair of demonstration circuits to create more complex controls for Arduino systems by sending codes as basic characters to be interpreted by a receiver circuit.</p></div></div><div class="sect1" title="Using XBee Wireless Data Modules for Greater Range and Faster Speed"><div class="titlepage"><div><div><h2 class="title" style="clear: both" id="using_xbee_wireless_data_modules_for_gre">Using XBee Wireless Data Modules for Greater Range and Faster Speed</h2></div></div></div><p>When you need a wireless data link with greater range and a faster data speed than what the basic wireless modules used earlier can provide, XBee data modules may be the right choice. These modules transmit and receive serial data directly to one or more XBee modules and to and from a computer. Several models of XBee modules are available, but we’ll use the Series 1 line of XBee transceivers, shown in <a class="xref" href="ch14.html#typical_xbee_transceiver" title="Figure 14-6. Typical XBee transceiver">Figure 14-6</a>.</p><div class="figure"><a id="typical_xbee_transceiver"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00254"/><img src="httpatomoreillycomsourcenostarchimages1630278.png.jpg" alt="Typical XBee transceiver"/></div></div><div class="figure-title">Figure 14-6. Typical XBee transceiver</div></div><p><a id="iddle1576" class="indexterm"/><a id="iddle1577" class="indexterm"/>Connecting the transceiver to an Arduino is simple with an XBee shield, shown in <a class="xref" href="ch14.html#xbee_connected_to_an_arduino_via_a_typic" title="Figure 14-7. XBee connected to an Arduino via a typical XBee shield">Figure 14-7</a>.</p><div class="figure"><a id="xbee_connected_to_an_arduino_via_a_typic"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00255"/><img src="httpatomoreillycomsourcenostarchimages1630280.png.jpg" alt="XBee connected to an Arduino via a typical XBee shield"/></div></div><div class="figure-title">Figure 14-7. XBee connected to an Arduino via a typical XBee shield</div></div><p>To communicate with a computer, you can use the XBee Explorer board, such as the board shown in <a class="xref" href="ch14.html#xbee_connected_via_usb_with_an_explorer" title="Figure 14-8. XBee connected via USB with an Explorer board">Figure 14-8</a> (SparkFun part WRL-08687).</p><div class="figure"><a id="xbee_connected_via_usb_with_an_explorer"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00256"/><img src="httpatomoreillycomsourcenostarchimages1630282.png.jpg" alt="XBee connected via USB with an Explorer board"/></div></div><div class="figure-title">Figure 14-8. XBee connected via USB with an Explorer board</div></div><p>XBees don’t require their own library; they operate as a simple serial <span class="emphasis"><em>data bridge</em></span> that sends and receives data via the Arduino’s serial line.</p></div><div class="sect1" title="Project #48: Transmitting Data with an XBee"><div class="titlepage"><div><div><h2 class="title" style="clear: both" id="project_hash48_transmitting_data_with_an">Project #48: Transmitting Data with an XBee</h2></div></div></div><p><a id="iddle1578" class="indexterm"/>This project will demonstrate simple data transmission by sending data from an Arduino to a computer that has an XBee and Explorer board. The project involves two basics steps: First, we’ll connect an XBee to an XBee shield. Then we’ll connect the shield to the Arduino.</p><p>Notice the tiny switch on the Arduino shield, as shown in <a class="xref" href="ch14.html#xbee_shield_data_switch" title="Figure 14-9. XBee shield data switch">Figure 14-9</a>.</p><div class="figure"><a id="xbee_shield_data_switch"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00257"/><img src="httpatomoreillycomsourcenostarchimages1630284.png.jpg" alt="XBee shield data switch"/></div></div><div class="figure-title">Figure 14-9. XBee shield data switch</div></div><p>This switch is identical to the switch on the GPS shield used in <a class="xref" href="ch13.html" title="Chapter 13. Using GPS with Your Arduino">Chapter 13</a>. This data switch controls whether data from the Arduino USB or the XBee is sent to the microcontroller. When you’re uploading a sketch, set the switch to DLINE; you’ll change it to UART when you’re running a sketch.</p><div class="sect2" title="The Sketch"><div class="titlepage"><div><div><h3 class="title" id="sketch-id00119">The Sketch</h3></div></div></div><p>Create and upload the following sketch:</p><a id="pro_id00142"/><pre class="programlisting">// Project 48 - Transmitting Data with an XBee
+
+void setup()
+{
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  Serial.println("Hello, world");
+  delay(1000);
+}</pre><p>Although this code simply sends the text <span class="emphasis"><em>Hello, world</em></span> to the serial line, it nicely demonstrates the simplicity of using XBee modules to send data: You simply write to the serial line, and the XBee takes care of the rest. Remove the USB cable from the Arduino board, and power the board using an external supply such as the 9 V battery and cable from <a class="xref" href="ch12.html" title="Chapter 12. Motors and Movement">Chapter 12</a>. (Don’t forget to set the switch back to UART.)</p></div><div class="sect2" title="Setting Up the Computer to Receive Data"><div class="titlepage"><div><div><h3 class="title" id="setting_up_the_computer_to_receive_data">Setting Up the Computer to Receive Data</h3></div></div></div><p>Now let’s set up the computer to receive data. Using an Explorer board (<a class="xref" href="ch14.html#xbee_connected_via_usb_with_an_explorer" title="Figure 14-8. XBee connected via USB with an Explorer board">Figure 14-8</a>), connect another XBee to your computer. Then download and install the Terminal program, available for Windows from <span class="emphasis"><em><a class="ulink" href="https://sites.google.com/site/terminalbpp/" target="_top">https://sites.google.com/site/terminalbpp/</a></em></span>. When you open Terminal, you should see a screen like the one shown in <a class="xref" href="ch14.html#terminal_emulator_software" title="Figure 14-10. Terminal emulator software">Figure 14-10</a>.</p><div class="figure"><a id="terminal_emulator_software"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00258"/><img src="httpatomoreillycomsourcenostarchimages1630286.png.jpg" alt="Terminal emulator software"/></div></div><div class="figure-title">Figure 14-10. Terminal emulator software</div></div><p><a id="iddle1510" class="indexterm"/>At the top of the screen, set the Baud Rate to <span class="strong"><strong>9600</strong></span>, Data Bits to <span class="strong"><strong>8</strong></span>, Parity to <span class="strong"><strong>none</strong></span>, Stop Bits to <span class="strong"><strong>1</strong></span>, and Handshaking to <span class="strong"><strong>none</strong></span>. Then click the <span class="strong"><strong>ReScan</strong></span> button in the upper-left corner to force the software to select the correct USB port. Finally, click <span class="strong"><strong>Connect</strong></span>, and after a moment you should see data being sent from the Arduino in the Terminal window, as shown in <a class="xref" href="ch14.html#reception_of_data_from_the_remote_xbee" title="Figure 14-11. Reception of data from the remote XBee">Figure 14-11</a>.</p><div class="figure"><a id="reception_of_data_from_the_remote_xbee"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00259"/><img src="httpatomoreillycomsourcenostarchimages1630288.png.jpg" alt="Reception of data from the remote XBee"/></div></div><div class="figure-title">Figure 14-11. Reception of data from the remote XBee</div></div><p>You can attach multiple XBee transmitters to one computer, with each sending its own data for monitoring purposes. For example, from the comfort of your desk, you could monitor various sensors, such as temperature sensors, placed throughout an area. You could even control multiple XBee-connected Arduinos using a similar method, as you’ll see in the next project.</p></div></div><div class="sect1" title="Project #49: Building a Remote Control Thermometer"><div class="titlepage"><div><div><h2 class="title" style="clear: both" id="project_hash49_building_a_remote_control">Project #49: Building a Remote Control Thermometer</h2></div></div></div><p><a id="iddle1579" class="indexterm"/>In this project, you’ll build a remote control thermometer that returns the temperature upon request from your computer. In the process, you’ll learn the basics of remote-sensor data retrieval and create a base for use with other projects that involve remote sensing.</p><div class="sect2" title="The Hardware"><div class="titlepage"><div><div><h3 class="title" id="hardware-id00120">The Hardware</h3></div></div></div><p>The following hardware is required:</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>Arduino and USB cable</p></li><li class="listitem"><p>One TMP36 temperature sensor</p></li><li class="listitem"><p>Two XBee (Series 1) modules</p></li><li class="listitem"><p>One XBee Arduino shield</p></li><li class="listitem"><p>One XBee Explorer board and USB cable</p></li><li class="listitem"><p>Various connecting wires</p></li><li class="listitem"><p>A 9 V battery and DC socket cable (as used in <a class="xref" href="ch12.html" title="Chapter 12. Motors and Movement">Chapter 12</a>)</p></li><li class="listitem"><p>One breadboard</p></li></ul></div></div><div class="sect2" title="The Layout"><div class="titlepage"><div><div><h3 class="title" id="layout">The Layout</h3></div></div></div><p>Insert one XBee into the shield; then connect the shield to the Arduino board. Use the small solderless breadboard to hold the TMP36 and add wires to 5 V, GND, and A0 on the XBee shield (as with Project 8), as shown in <a class="xref" href="ch14.html#remote_temperature-sensing_arduino_setup" title="Figure 14-12. Remote temperature-sensing Arduino setup">Figure 14-12</a>.</p><div class="figure"><a id="remote_temperature-sensing_arduino_setup"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00260"/><img src="httpatomoreillycomsourcenostarchimages1630290.png.jpg" alt="Remote temperature-sensing Arduino setup"/></div></div><div class="figure-title">Figure 14-12. Remote temperature-sensing Arduino setup</div></div><p>The USB Explorer board and the other XBee will be connected to the PC after you upload the following sketch to your Arduino board.</p></div><div class="sect2" title="The Sketch"><div class="titlepage"><div><div><h3 class="title" id="sketch-id00121">The Sketch</h3></div></div></div><p>Enter and upload the following sketch:</p><a id="pro_id00143"/><pre class="programlisting">  // Project 49 - Building a Remote Control Thermometer
+
+  char a;
+  float voltage=0;
+  float sensor=0;
+  float celsius=0;
+  float fahrenheit=0;
+  float photocell=0;
+
+  void setup()
+  {
+    Serial.begin(9600);
+  }
+
+  void sendC()
+  {
+    sensor=analogRead(0);
+    voltage=((sensor*5000)/1024);
+    voltage=voltage-500;
+    celsius=voltage/10;
+    fahrenheit=((celsius*1.8)+32);
+    Serial.print("Temperature: ");
+    Serial.print(celsius,2);
+    Serial.println(" degrees C");
+  }
+
+  void sendF()
+  {
+    sensor=analogRead(0);
+    voltage=((sensor*5000)/1024);
+    voltage=voltage-500;
+    celsius=voltage/10;
+    fahrenheit=((celsius*1.8)+32);
+    Serial.print("Temperature: ");
+    Serial.print(fahrenheit,2);
+    Serial.println(" degrees F");
+  }
+
+  void getCommand()
+<span class="gray-background">1</span> {
+    Serial.flush();
+    while (Serial.available() == 0)
+    {
+      // do nothing until data arrives from XBee
+    }
+    while (Serial.available() &gt; 0)
+    {
+      a = Serial.read(); // read the number in the serial buffer
+    }
+  }
+
+  void loop()
+  {
+    getCommand();// listen for command from PC
+<span class="gray-background">2</span>   switch (a)
+    {
+<span class="gray-background">3</span>    case 'c':
+      // send temperature in Celsius
+      sendC();
+      break;
+<span class="gray-background">4</span>    case 'f':
+      // send temperature in Fahrenheit
+      sendF();
+      break;
+    }
+  }</pre><p>First, the sketch listens to the serial line using the function <code class="literal">getCommand()</code> at <span class="gray-background">1</span>. It will loop around until it receives a character, at which point it stores that character in variable <code class="literal">a</code>. Once the character has been received, it is interpreted using the <code class="literal">switch-case</code> function at <span class="gray-background">2</span>. If the letter <span class="emphasis"><em>c</em></span> is received, the function <code class="literal">sendC()</code> at <span class="gray-background">3</span> calculates the temperature in Celsius, writes it to the serial line, and then sends the temperate to the host PC via the XBees. If the letter <span class="emphasis"><em>f</em></span> is received, <code class="literal">sendF()</code> at <span class="gray-background">4</span> calculates the temperature in Fahrenheit and sends it back to the PC.</p></div><div class="sect2" title="Operation"><div class="titlepage"><div><div><h3 class="title" id="operation">Operation</h3></div></div></div><p>Run the Terminal program, as you did earlier in this chapter, and then send out a <span class="emphasis"><em>c</em></span> or an <span class="emphasis"><em>f</em></span>. The temperature should be returned in about 1 second and should look similar to the results shown in <a class="xref" href="ch14.html#results_from_project_49" title="Figure 14-13. Results from Project 49">Figure 14-13</a>.</p><div class="figure"><a id="results_from_project_49"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00261"/><img src="httpatomoreillycomsourcenostarchimages1630292.png.jpg" alt="Results from Project 49"/></div></div><div class="figure-title">Figure 14-13. Results from Project 49</div></div></div></div><div class="sect1" title="Looking Ahead"><div class="titlepage"><div><div><h2 class="title" style="clear: both" id="looking_ahead-id00122">Looking Ahead</h2></div></div></div><p>This chapter shows how simple it is to control multiple Arduino systems remotely. For example, you could control digital outputs by sending characters from the PC terminal or another Arduino, or have certain characters recognized by individual Arduino boards. With the knowledge you’ve gained so far, many more creative options are available to you.</p><p>But there’s still much more to investigate in terms of wireless data transmission, so keep reading and working along as you learn to use simple television remote controls with the Arduino in the next chapter.</p></div></section></body></html>

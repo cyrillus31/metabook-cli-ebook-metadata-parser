@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg"><head><title>Chapter 15. Infrared Remote Control</title><link rel="stylesheet" type="text/css" href="core.css"/><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"/><link rel="up" href="index.html" title="Arduino Workshop: A hands-on introduction with 65 projects"/><link rel="prev" href="ch14.html" title="Chapter 14. Wireless Data"/><link rel="next" href="ch16.html" title="Chapter 16. Reading RFID Tags"/></head><body><section class="chapter" title="Chapter 15. Infrared Remote Control" epub:type="chapter" id="infrared_remote_control"><div class="titlepage"><div><div><h2 class="title">Chapter 15. Infrared Remote Control</h2></div></div></div><p>In this chapter you will</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>Create and test a simple infrared receiver</p></li><li class="listitem"><p>Remotely control Arduino digital output pins</p></li><li class="listitem"><p>Add a remote control system to the motorized tank we created in <a class="xref" href="ch12.html" title="Chapter 12. Motors and Movement">Chapter 12</a></p></li></ul></div><p>As you’ll see, with the addition of an inexpensive receiver module, your Arduino can receive the signals from an infrared remote and act upon them.</p><div class="sect1" title="What Is Infrared?"><div class="titlepage"><div><div><h2 class="title" style="clear: both" id="what_is_infraredquestion_mark">What Is Infrared?</h2></div></div></div><p>Although most people use infrared remote controls in a variety of daily actions, they don’t know how they work. Infrared (IR) signals are actually beams of light that operate at a wavelength that cannot be seen by the naked eye. So when you look at the little LED poking out of a remote control and press a button, you won’t see the LED light up.</p><p><a id="iddle1181" class="indexterm"/><a id="iddle1280" class="indexterm"/><a id="iddle1282" class="indexterm"/><a id="iddle1538" class="indexterm"/>IR remote controls contain one or more special infrared light–generating LEDs that are used to transmit the IR signals. For example, when you press a button on the remote, the LED turns on and off repeatedly in a pattern that is unique for each button pressed on the remote. This signal is received by a special IR receiver and converted to pulses of electrical current that are then converted to data in the receiver’s electronics. If you are curious about these patterns, you can actually view them by looking at the IR LED on a remote through the viewfinder of a phone camera or digital camera.</p></div><div class="sect1" title="Setting Up for Infrared"><div class="titlepage"><div><div><h2 class="title" style="clear: both" id="setting_up_for_infrared">Setting Up for Infrared</h2></div></div></div><p>Before moving forward, we need to install the infrared Arduino library, so visit <span class="emphasis"><em><a class="ulink" href="https://github.com/shirriff/Arduino-IRremote/" target="_top">https://github.com/shirriff/Arduino-IRremote/</a></em></span> to download the required files and install them, as explained in <a class="xref" href="ch08.html#expanding_sketches_with_libraries" title="Expanding Sketches with Libraries">Expanding Sketches with Libraries</a>.</p><div class="sect2" title="The IR Receiver"><div class="titlepage"><div><div><h3 class="title" id="ir_receiver">The IR Receiver</h3></div></div></div><p>The next step is to set up the IR receiver and test that it is working. You can choose either an independent IR receiver (shown in <a class="xref" href="ch15.html#ir_receiver-id00123" title="Figure 15-1. IR receiver">Figure 15-1</a>) or a prewired module (shown in <a class="xref" href="ch15.html#pre-wired_ir_receiver_module" title="Figure 15-2. Pre-wired IR receiver module">Figure 15-2</a>), which is the easier route to take.</p><div class="figure"><a id="ir_receiver-id00123"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00262"/><img src="httpatomoreillycomsourcenostarchimages1630294.png.jpg" alt="IR receiver"/></div></div><div class="figure-title">Figure 15-1. IR receiver</div></div><div class="figure"><a id="pre-wired_ir_receiver_module"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00263"/><img src="httpatomoreillycomsourcenostarchimages1630296.png.jpg" alt="Pre-wired IR receiver module"/></div></div><div class="figure-title">Figure 15-2. Pre-wired IR receiver module</div></div><p>The independent IR receiver shown in <a class="xref" href="ch15.html#ir_receiver-id00123" title="Figure 15-1. IR receiver">Figure 15-1</a> is a Vishay TSOP4138, available from retailers such as Newark (part number 59K0287) or element14 (part number 1040743). The bottom leg of the receiver (as shown in the figure) connects to an Arduino digital pin, the center leg to GND, and the top leg to 5V.</p><p><a class="xref" href="ch15.html#pre-wired_ir_receiver_module" title="Figure 15-2. Pre-wired IR receiver module">Figure 15-2</a> shows a prewired IR module. Prewired receiver modules are available from DFRobot and other retailers. The benefit of using these modules is that they include connection wires and are labeled for easy reference.</p><p>Regardless of your choice of module, in all of the following examples, you’ll connect the D (or data line) to Arduino digital pin 11, VCC to 5V, and GND to GND.</p></div><div class="sect2" title="The Remote Control"><div class="titlepage"><div><div><h3 class="title" id="remote_control">The Remote Control</h3></div></div></div><p><a id="iddle1281" class="indexterm"/>Finally, you will need a remote control. We’ll use a Sony TV remote like the one shown in <a class="xref" href="ch15.html#typical_sony_remote_control" title="Figure 15-3. Typical Sony remote control">Figure 15-3</a>. If you don’t have access to a Sony remote, any inexpensive universal remote control can be used after you reset it to Sony codes. See the instructions included with your remote control to do this.</p><div class="figure"><a id="typical_sony_remote_control"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00264"/><img src="httpatomoreillycomsourcenostarchimages1630298.png.jpg" alt="Typical Sony remote control"/></div></div><div class="figure-title">Figure 15-3. Typical Sony remote control</div></div></div><div class="sect2" title="A Test Sketch"><div class="titlepage"><div><div><h3 class="title" id="test_sketch">A Test Sketch</h3></div></div></div><p>Now let’s make sure that everything works. After connecting your IR receiver to the Arduino, enter and upload the sketch in <a class="xref" href="ch15.html#ir_receiver_test" title="Example 15-1. IR receiver test">Example 15-1</a>.</p><div class="example"><a id="ir_receiver_test"/><div class="example-title">Example 15-1. IR receiver test</div><div class="example-contents"><pre class="programlisting">  // Listing 15-1
+
+  int receiverpin = 11;       // pin 1 of IR receiver to Arduino digital pin 11
+<span class="gray-background">1</span> #include &lt;IRremote.h&gt;       // use the library
+<span class="gray-background">2</span> IRrecv irrecv(receiverpin); // create instance of irrecv
+<span class="gray-background">3</span> decode_results results;
+
+  void setup()
+  {
+    Serial.begin(9600);
+    irrecv.enableIRIn();         // start the IR receiver
+  }
+
+  void loop()
+  {
+<span class="gray-background">4</span>   if (irrecv.decode(&amp;results)) // have we received an IR signal?
+    {
+<span class="gray-background">5</span>     Serial.print(results.value, HEX); // display IR code on the Serial Monitor
+      Serial.print(" ");
+      irrecv.resume(); // receive the next value
+    }
+  }</pre></div></div><p>This sketch is relatively simple, because most of the work is done in the background by the IR library. At <span class="gray-background">4</span>, we check to see if a signal has <a id="iddle1279" class="indexterm"/>been received from the remote control. If so, it is displayed on the Serial Monitor in hexadecimal at <span class="gray-background">5</span>. The lines at <span class="gray-background">1</span>, <span class="gray-background">2</span>, and <span class="gray-background">3</span> activate the IR library and create an instance of the infrared library function to refer to in the rest of the sketch.</p></div><div class="sect2" title="Testing the Setup"><div class="titlepage"><div><div><h3 class="title" id="testing_the_setup">Testing the Setup</h3></div></div></div><p>Once you’ve uploaded the sketch, open the Serial Monitor, aim the remote at the receiver, and start pressing buttons. You should see codes displayed on the Serial Monitor after each button press. For example, <a class="xref" href="ch15.html#results_of_pressing_buttons_after_runnin" title="Figure 15-4. Results of pressing buttons after running the code in Example 15-1">Figure 15-4</a> shows the results of pressing 1, 2, and 3, once each.</p><div class="figure"><a id="results_of_pressing_buttons_after_runnin"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00265"/><img src="httpatomoreillycomsourcenostarchimages1630300.png.jpg" alt="Results of pressing buttons after running the code in"/></div></div><div class="figure-title">Figure 15-4. Results of pressing buttons after running the code in <a class="xref" href="ch15.html#ir_receiver_test" title="Example 15-1. IR receiver test">Example 15-1</a></div></div><p><a class="xref" href="ch15.html#example_sony_ir_codes" title="Table 15-1. Example Sony IR codes">Table 15-1</a> lists the codes from a basic Sony remote control that we’ll use in upcoming sketches. However, when running <a class="xref" href="ch15.html#ir_receiver_test" title="Example 15-1. IR receiver test">Example 15-1</a>, notice how each code number repeats three times. This is an idiosyncrasy of Sony IR systems, which send the code three times for each button press. You can ignore these repeats with some clever coding, but for now let’s skip to remote controlling with the next project.</p><div class="table"><a id="example_sony_ir_codes"/><div class="table-title">Table 15-1. Example Sony IR codes</div><div class="table-contents"><table style="border-collapse: collapse; border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; "><colgroup><col class="c1"/><col class="c2"/><col class="c3"/><col class="c4"/></colgroup><thead><tr><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>Button</p></td><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>Code</p></td><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>Button</p></td><td style="vertical-align: top; border-bottom: 0.5pt solid ; "><p>Code</p></td></tr></thead><tbody><tr><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>Power</p></td><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>A90</p></td><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>7</p></td><td style="vertical-align: top; border-bottom: 0.5pt solid ; "><p>610</p></td></tr><tr><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>Mute</p></td><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>290</p></td><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>8</p></td><td style="vertical-align: top; border-bottom: 0.5pt solid ; "><p>E10</p></td></tr><tr><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>1</p></td><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>10</p></td><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>9</p></td><td style="vertical-align: top; border-bottom: 0.5pt solid ; "><p>110</p></td></tr><tr><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>2</p></td><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>810</p></td><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>0</p></td><td style="vertical-align: top; border-bottom: 0.5pt solid ; "><p>910</p></td></tr><tr><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>3</p></td><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>410</p></td><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>Volume up</p></td><td style="vertical-align: top; border-bottom: 0.5pt solid ; "><p>490</p></td></tr><tr><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>4</p></td><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>C10</p></td><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>Volume down</p></td><td style="vertical-align: top; border-bottom: 0.5pt solid ; "><p>C90</p></td></tr><tr><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>5</p></td><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>210</p></td><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>Channel up</p></td><td style="vertical-align: top; border-bottom: 0.5pt solid ; "><p>90</p></td></tr><tr><td style="vertical-align: top; border-right: 0.5pt solid ; "><p>6</p></td><td style="vertical-align: top; border-right: 0.5pt solid ; "><p>A10</p></td><td style="vertical-align: top; border-right: 0.5pt solid ; "><p>Channel down</p></td><td style="vertical-align: top; "><p>890</p></td></tr></tbody></table></div></div></div></div><div class="sect1" title="Project #50: Creating an IR Remote Control Arduino"><div class="titlepage"><div><div><h2 class="title" style="clear: both" id="project_hash50_creating_an_ir_remote_con">Project #50: Creating an IR Remote Control Arduino</h2></div></div></div><p><a id="iddle1278" class="indexterm"/>This project will demonstrate how to control digital output pins using IR remote control. This project will allow you to control digital pins 2 through 7 with the matching numerical buttons 2 through 7 on a Sony remote control. When you press a button on the remote control, the matching digital output pin will change state to HIGH for 1 second and then return to LOW. You’ll be able to use this project as a base or guide to add remote control capabilities to your other projects.</p><div class="sect2" title="The Hardware"><div class="titlepage"><div><div><h3 class="title" id="hardware-id00124">The Hardware</h3></div></div></div><p>The hardware is the same as that required for the IR test at the beginning of this chapter, with the addition of the custom LED shield you made for Project 28. (You could always connect LEDs, motors, or other forms of output instead of this LED shield.)</p></div><div class="sect2" title="The Sketch"><div class="titlepage"><div><div><h3 class="title" id="sketch-id00125">The Sketch</h3></div></div></div><p>Enter and upload the following sketch:</p><a id="pro_id00144"/><pre class="programlisting">  // Project 50 – Creating an IR Remote Control Arduino
+
+  int receiverpin = 11;       // pin 1 of IR receiver to Arduino digital pin 11
+  #include &lt;IRremote.h&gt;
+  IRrecv irrecv(receiverpin); // create instance of irrecv
+  decode_results results;
+
+  void setup()
+  {
+    irrecv.enableIRIn(); // start the receiver
+    for (int z = 2 ; z &lt; 8 ; z++) // set up digital pins
+    {
+      pinMode(z, OUTPUT);
+    }
+  }
+
+<span class="gray-background">1</span> void translateIR()
+  // takes action based on IR code received
+  // uses Sony IR codes
+  {
+    switch(results.value)
+    {
+<span class="gray-background">2</span>     case 0x810:  pinOn(2); break; // 2
+      case 0x410:  pinOn(3); break; // 3
+      case 0xC10:  pinOn(4); break; // 4
+      case 0x210:  pinOn(5); break; // 5
+      case 0xA10:  pinOn(6); break; // 6
+      case 0x610:  pinOn(7); break; // 7
+    }
+  }
+
+<span class="gray-background">3</span> void pinOn(int pin) // turns on digital pin "pin" for 1 second
+  {
+    digitalWrite(pin, HIGH);
+    delay(1000);
+    digitalWrite(pin, LOW);
+  }
+
+  void loop()
+  {
+<span class="gray-background">4</span>   if (irrecv.decode(&amp;results)) // have we received an IR signal?
+    {
+      translateIR();
+<span class="gray-background">5</span>     for (int z = 0 ; z &lt; 2 ; z++) // ignore the 2nd and 3rd repeated codes
+      {
+        irrecv.resume(); // receive the next value
+      }
+    }
+  }</pre><p>This sketch has three major parts. First, it waits for a signal from the remote at <span class="gray-background">4</span>. When a signal is received, the signal is tested in the function <code class="literal">translateIR()</code> at <span class="gray-background">1</span> to determine which button was pressed and what action to take.</p><p>Notice at <span class="gray-background">2</span> how we compare the hexadecimal codes returned by the IR library. These are the codes returned by the test conducted in <a class="xref" href="ch15.html#ir_receiver_test" title="Example 15-1. IR receiver test">Example 15-1</a>. When the codes for buttons 2 through 7 are received, the function <code class="literal">pinOn()</code> at <span class="gray-background">3</span> is called, which turns on the matching digital pin for 1 second.</p><p>As mentioned, Sony remotes send the code three times for each button press, so we use a small loop at <span class="gray-background">5</span> to ignore the second and third codes. Finally, note the addition of <code class="literal">0x</code> in front of the hexadecimal numbers used in the <code class="literal">case</code> statements at <span class="gray-background">2</span>.</p><div class="note" title="Note"><h3 class="title"><a id="ch15note01"/>Note</h3><p><span class="emphasis"><em>Hexadecimal numbers are base 16 and use the digits 0 through 9 and then A through F, before moving on to the next column. For example, decimal 10 in hexadecimal is A, decimal 15 in hexadecimal is F, decimal 16 is 10 hexadecimal, and so on. When using a hexadecimal number in a sketch, preface it with <code class="literal">0x</code>.</em></span></p></div></div><div class="sect2" title="Expanding the Sketch"><div class="titlepage"><div><div><h3 class="title" id="expanding_the_sketch">Expanding the Sketch</h3></div></div></div><p>You can expand the options or controls available for controlling your motorized tank by testing more buttons. To do so, use <a class="xref" href="ch15.html#ir_receiver_test" title="Example 15-1. IR receiver test">Example 15-1</a> to determine which button creates which code, and then add each new code to the <code class="literal">switch...case</code> statement.</p></div></div><div class="sect1" title="Project #51: Creating an IR Remote Control Tank"><div class="titlepage"><div><div><h2 class="title" style="clear: both" id="project_hash51_creating_an_ir_remote_con">Project #51: Creating an IR Remote Control Tank</h2></div></div></div><p><a id="iddle1385" class="indexterm"/>To show you how to integrate an IR remote control into an existing project, we’ll add IR to the tank described for Project 40. In this project, instead of presetting the tank’s direction and distances, the sketch will show you how to control these actions with a simple Sony TV remote.</p><div class="sect2" title="The Hardware"><div class="titlepage"><div><div><h3 class="title" id="hardware-id00126">The Hardware</h3></div></div></div><p>The required hardware is the same as that required for the tank you built for Project 40, with the addition of the IR receiver module in the method described earlier in this chapter. In the following sketch, the tank will respond to the buttons that you press on the remote control as follows: press 2 for forward, 8 for backward, 4 for rotate left, and 6 for rotate right.</p></div><div class="sect2" title="The Sketch"><div class="titlepage"><div><div><h3 class="title" id="sketch-id00127">The Sketch</h3></div></div></div><p>After reassembling your tank and adding the IR receiver, enter and upload the following sketch:</p><a id="pro_id00145"/><pre class="programlisting">// Project 51 - Creating an IR Remote Control Tank
+
+int receiverpin = 11;       // pin 1 of IR receiver to Arduino digital pin 11
+#include &lt;IRremote.h&gt;
+
+IRrecv irrecv(receiverpin); // create instance of 'irrecv'
+decode_results results;
+
+int m1speed     = 6; // digital pins for speed control
+int m2speed     = 5;
+int m1direction = 7; // digital pins for direction control
+int m2direction = 4;
+
+void setup()
+{
+  pinMode(m1direction, OUTPUT);
+  pinMode(m2direction, OUTPUT);
+  irrecv.enableIRIn(); // start IR receiver
+}
+
+void goForward(int duration, int pwm)
+{
+  digitalWrite(m1direction, HIGH); // forward
+  digitalWrite(m2direction, HIGH); // forward
+  analogWrite(m1speed, pwm);       // at selected speed
+  analogWrite(m2speed, pwm);
+  delay(duration);                 // and duration
+  analogWrite(m1speed, 0);         // then stop
+  analogWrite(m2speed, 0);
+}
+
+void goBackward(int duration, int pwm)
+{
+  digitalWrite(m1direction, LOW);  // backward
+  digitalWrite(m2direction, LOW);  // backward
+  analogWrite(m1speed, pwm);       // at selected speed
+  analogWrite(m2speed, pwm);
+  delay(duration);
+  analogWrite(m1speed, 0);         // then stop
+  analogWrite(m2speed, 0);
+}
+
+void rotateRight(int duration, int pwm)
+{
+  digitalWrite(m1direction, HIGH); // forward
+  digitalWrite(m2direction, LOW);  // backward
+  analogWrite(m1speed, pwm);       // at selected speed
+  analogWrite(m2speed, pwm);
+  delay(duration);                 // and duration
+  analogWrite(m1speed, 0);         // then stop
+  analogWrite(m2speed, 0);
+}
+
+void rotateLeft(int duration, int pwm)
+{
+  digitalWrite(m1direction, LOW);  // backward
+  digitalWrite(m2direction, HIGH); // forward
+  analogWrite(m1speed, pwm);       // at selected speed
+  analogWrite(m2speed, pwm);
+  delay(duration);                 // and duration
+  analogWrite(m1speed, 0);         // then stop
+  analogWrite(m2speed, 0);
+}
+
+// translateIR takes action based on IR code received, uses Sony IR codes
+void translateIR()
+{
+  switch(results.value)
+  {
+    case 0x810:  goForward(250, 255);   break; // 2
+    case 0xC10:  rotateLeft(250, 255);  break; // 4
+    case 0xA10:  rotateRight(250, 255); break; // 6
+    case 0xE10:  goBackward(250, 255);  break; // 8
+  }
+}
+
+void loop()
+{
+  if (irrecv.decode(&amp;results)) // have we received an IR signal?
+  {
+    translateIR();
+    for (int z = 0 ; z &lt; 2 ; z++) // ignore the repeated codes
+    {
+      irrecv.resume(); // receive the next value
+    }
+  }
+}</pre><p>This sketch should look somewhat familiar to you. Basically, instead of turning on digital pins, it calls the motor control functions that were used in the tank from <a class="xref" href="ch12.html" title="Chapter 12. Motors and Movement">Chapter 12</a>.</p></div></div><div class="sect1" title="Looking Ahead"><div class="titlepage"><div><div><h2 class="title" style="clear: both" id="looking_ahead-id00128">Looking Ahead</h2></div></div></div><p>Having worked through the projects in this chapter, you should understand how to send commands to your Arduino via an infrared remote control device. Combined with your existing knowledge (and forthcoming projects), you now can replace physical forms of input such as buttons with a remote control.</p><p>But the fun doesn’t stop here. In the next chapter, we’ll use Arduino to harness something that, to the untrained eye, is fascinating and futuristic: radio-frequency identification systems.</p></div></section></body></html>

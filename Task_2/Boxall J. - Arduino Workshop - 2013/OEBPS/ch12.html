@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg"><head><title>Chapter 12. Motors and Movement</title><link rel="stylesheet" type="text/css" href="core.css"/><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"/><link rel="up" href="index.html" title="Arduino Workshop: A hands-on introduction with 65 projects"/><link rel="prev" href="ch11.html" title="Chapter 11. Meet the Arduino Family"/><link rel="next" href="ch13.html" title="Chapter 13. Using GPS with Your Arduino"/></head><body><section class="chapter" title="Chapter 12. Motors and Movement" epub:type="chapter" id="motors_and_movement"><div class="titlepage"><div><div><h2 class="title">Chapter 12. Motors and Movement</h2></div></div></div><p>In this chapter you will</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>Use a servo to create an analog thermometer</p></li><li class="listitem"><p>Learn how to control the speed and direction of electric motors</p></li><li class="listitem"><p>Use an Arduino motor shield</p></li><li class="listitem"><p>Begin work on a motorized tank robot</p></li><li class="listitem"><p>Use simple microswitches for collision avoidance</p></li><li class="listitem"><p>Use infrared and ultrasonic distance sensors for collision avoidance</p></li></ul></div><div class="sect1" title="Making Small Motions with Servos"><div class="titlepage"><div><div><h2 class="title" style="clear: both" id="making_small_motions_with_servos">Making Small Motions with Servos</h2></div></div></div><p>A <span class="emphasis"><em>servo</em></span> (short for <span class="emphasis"><em>servomechanism</em></span>) contains an electric motor that can be commanded to rotate to a specific angular position. For example, you might use a servo to control the steering of a remote control car by connecting the servo to a <span class="emphasis"><em>horn</em></span>, a small arm or bar that the servo rotates. An example of a horn is one of the hands on an analog clock. <a class="xref" href="ch12.html#servo_and_various_horns" title="Figure 12-1. Servo and various horns">Figure 12-1</a> shows a servo and three types of horns.</p><div class="figure"><a id="servo_and_various_horns"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00210"/><img src="httpatomoreillycomsourcenostarchimages1630190.png.jpg" alt="Servo and various horns"/></div></div><div class="figure-title">Figure 12-1. Servo and various horns</div></div><div class="sect2" title="Selecting a Servo"><div class="titlepage"><div><div><h3 class="title" id="selecting_a_servo">Selecting a Servo</h3></div></div></div><p><a id="iddle1200" class="indexterm"/><a id="iddle1454" class="indexterm"/><a id="iddle1458" class="indexterm"/>When you’re selecting a servo, consider several parameters:</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p title="Speed"><span class="title"><strong><span class="strong"><strong>Speed</strong></span></strong></span>. The time it takes for the servo to rotate, usually measured in seconds per angular degree.</p></li><li class="listitem"><p title="Rotational range"><span class="title"><strong><span class="strong"><strong>Rotational range</strong></span></strong></span>. The angular range through which the servo can rotate—for example, 180 degrees (half of a full rotation) or 360 degrees (one complete rotation).</p></li><li class="listitem"><p title="Current"><span class="title"><strong><span class="strong"><strong>Current</strong></span></strong></span>. How much current the servo draws. When using a servo with an Arduino, you may need to use an external power supply for the servo.</p></li><li class="listitem"><p title="Torque"><span class="title"><strong><span class="strong"><strong>Torque</strong></span></strong></span>. The amount of force the servo can exert when rotating. The greater the torque, the heavier the item the servo can control. The torque produced is generally proportional to the amount of current used.</p></li></ul></div><p>The servo shown in <a class="xref" href="ch12.html#servo_and_various_horns" title="Figure 12-1. Servo and various horns">Figure 12-1</a> is a hexTronik HXT900. It is inexpensive and can rotate up to 180 degrees, as shown in <a class="xref" href="ch12.html#example_servo_rotation_range" title="Figure 12-2. Example servo rotation range">Figure 12-2</a>.</p><div class="figure"><a id="example_servo_rotation_range"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00211"/><img src="httpatomoreillycomsourcenostarchimages1630192.png.jpg" alt="Example servo rotation range"/></div></div><div class="figure-title">Figure 12-2. Example servo rotation range</div></div></div><div class="sect2" title="Connecting a Servo"><div class="titlepage"><div><div><h3 class="title" id="connecting_a_servo">Connecting a Servo</h3></div></div></div><p><a id="iddle1453" class="indexterm"/><a id="iddle1455" class="indexterm"/><a id="iddle1457" class="indexterm"/>It’s easy to connect a servo to an Arduino because only three wires are involved. If you’re using the HXT900, the darkest wire connects to GND, the center wire connects to 5 V, and the lightest wire (the <span class="emphasis"><em>pulse</em></span> wire) connects to a digital pin. If you’re using a different servo, check its data sheet for the correct wiring.</p></div><div class="sect2" title="Putting a Servo to Work"><div class="titlepage"><div><div><h3 class="title" id="putting_a_servo_to_work">Putting a Servo to Work</h3></div></div></div><p>Now let’s put our servo to work. In this sketch, the servo will turn through its rotational range. Connect the servo to your Arduino as described, with the pulse wire connected to digital pin 4, and then enter and upload the sketch in <a class="xref" href="ch12.html#servo_demonstration_sketch" title="Example 12-1. Servo demonstration sketch">Example 12-1</a>.</p><div class="example"><a id="servo_demonstration_sketch"/><div class="example-title">Example 12-1. Servo demonstration sketch</div><div class="example-contents"><pre class="programlisting">// Listing 12-1
+
+#include &lt;Servo.h&gt;
+Servo myservo;
+
+void setup()
+{
+  myservo.attach(4);
+}
+
+void loop()
+{
+    myservo.write(180);
+    delay(1000);
+    myservo.write(90);
+    delay(1000);
+    myservo.write(0);
+    delay(1000);
+}</pre></div></div><p><a id="iddle1450" class="indexterm"/><a id="iddle1451" class="indexterm"/><a id="iddle1452" class="indexterm"/><a id="iddle1512" class="indexterm"/>In this sketch, we use the <span class="emphasis"><em>servo</em></span> library included with the Arduino IDE and create an instance of the servo with the following:</p><a id="pro_id00125"/><pre class="programlisting">#include &lt;Servo.h&gt;
+Servo myservo;</pre><p>Then, in <code class="literal">void setup()</code>, we tell the Arduino which digital pin the servo control is using:</p><a id="pro_id00126"/><pre class="programlisting">myservo.attach(4); // control pin on digital four</pre><p>Now we simply move the servo with the following:</p><a id="pro_id00127"/><pre class="programlisting">myservo.write(x);</pre><p>Here, <code class="literal">x</code> is an integer between 0 and 180 degrees—the angular position to which the servo will be moved. When running the sketch in <a class="xref" href="ch12.html#servo_demonstration_sketch" title="Example 12-1. Servo demonstration sketch">Example 12-1</a>, the servo will rotate across its maximum range, stopping at the extremes (0 degrees and 180 degrees) and at the midpoint (90 degrees). When looking at your servo, note that the 180-degree position is on the left and 0 degrees is on the right.</p><p>In addition to pushing or pulling objects, servos can also be used to communicate data similar to an analog gauge. For example, you could use a servo as an analog thermometer, as you’ll see in <a class="xref" href="ch12.html#project_hash38_building_an_analog_thermo" title="Project #38: Building an Analog Thermometer">Project #38: Building an Analog Thermometer</a>.</p></div></div><div class="sect1" title="Project #38: Building an Analog Thermometer"><div class="titlepage"><div><div><h2 class="title" style="clear: both" id="project_hash38_building_an_analog_thermo">Project #38: Building an Analog Thermometer</h2></div></div></div><p>Using our servo and the TMP36 temperature sensor from earlier chapters, we’ll build an analog thermometer. We’ll measure the temperature and then convert this measurement to an angle between 0 and 180 degrees to indicate a temperature between 0 and 30 degrees Celsius. The servo will rotate to the angle that matches the current temperature.</p><div class="sect2" title="The Hardware"><div class="titlepage"><div><div><h3 class="title" id="hardware-id00098">The Hardware</h3></div></div></div><p>The required hardware is minimal:</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>One TMP36 temperature sensor</p></li><li class="listitem"><p>One breadboard</p></li><li class="listitem"><p>One small servo</p></li><li class="listitem"><p>Various connecting wires</p></li><li class="listitem"><p>Arduino and USB cable</p></li></ul></div></div><div class="sect2" title="The Schematic"><div class="titlepage"><div><div><h3 class="title" id="schematic-id00099">The Schematic</h3></div></div></div><p><a id="iddle1456" class="indexterm"/>The circuit is also very simple, as shown in <a class="xref" href="ch12.html#schematic_for_project_38" title="Figure 12-3. Schematic for Project 38">Figure 12-3</a>.</p><div class="figure"><a id="schematic_for_project_38"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00212"/><img src="httpatomoreillycomsourcenostarchimages1630194.png.jpg" alt="Schematic for Project 38"/></div></div><div class="figure-title">Figure 12-3. Schematic for Project 38</div></div></div><div class="sect2" title="The Sketch"><div class="titlepage"><div><div><h3 class="title" id="sketch-id00100">The Sketch</h3></div></div></div><p>The sketch will determine the temperature using the same method used in Project 8. Then it will convert the temperature into an angular rotation value for the servo.</p><p>Enter and upload the following sketch:</p><a id="pro_id00128"/><pre class="programlisting">// Project 38 - Building an Analog Thermometer
+
+float voltage = 0;
+float  sensor = 0;
+float currentC = 0;
+int      angle = 0;
+
+#include &lt;Servo.h&gt;
+Servo myservo;
+
+void setup()
+{
+  myservo.attach(4);
+}
+int calculateservo(float temperature)
+{
+  float resulta;
+  int resultb;
+  resulta = -6 * temperature;
+  resulta = resulta + 180;
+  resultb = int(resulta);
+  return resultb;
+}
+
+void loop()
+{
+  // read current temperature
+  sensor = analogRead(0);
+  voltage = (sensor*5000)/1024;
+  voltage = voltage-500;
+  currentC = voltage/10;
+
+  // display current temperature on servo
+  angle = calculateservo(currentC);
+  // convert temperature to a servo position
+  if (angle&gt;=0 &amp;&amp; angle &lt;=30)
+  {
+    myservo.write(angle); // set servo to temperature
+    delay(1000);
+  }
+}</pre><p>Most of this sketch should be clear to you at this point, but the function <code class="literal">calculateservo()</code> is new. This function converts the temperature into the matching angle for the servo to use according to the following formula:</p><p>angle = (–6 × temperature) + 180</p><p>You might find it useful to make a <span class="emphasis"><em>backing sheet</em></span> to show the range of temperatures that the servo will display, with a small arrow to create a realistic effect. An example backing sheet is shown in <a class="xref" href="ch12.html#backing_sheet_indicates_the_temperature" title="Figure 12-4. A backing sheet indicates the temperature on our thermometer.">Figure 12-4</a>.</p><div class="figure"><a id="backing_sheet_indicates_the_temperature"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00213"/><img src="httpatomoreillycomsourcenostarchimages1630196.png.jpg" alt="A backing sheet indicates the temperature on our thermometer."/></div></div><div class="figure-title">Figure 12-4. A backing sheet indicates the temperature on our thermometer.</div></div></div></div><div class="sect1" title="Using Electric Motors"><div class="titlepage"><div><div><h2 class="title" style="clear: both" id="using_electric_motors">Using Electric Motors</h2></div></div></div><p><a id="iddle1139" class="indexterm"/><a id="iddle1140" class="indexterm"/><a id="iddle1174" class="indexterm"/><a id="iddle1175" class="indexterm"/><a id="iddle1186" class="indexterm"/><a id="iddle1188" class="indexterm"/><a id="iddle1360" class="indexterm"/><a id="iddle1362" class="indexterm"/><a id="iddle1520" class="indexterm"/><a id="iddle1521" class="indexterm"/>The next step in our motor-controlling journey is to work with small electric motors. Small motors are used for many applications, from small fans to toy cars to model railroads. As with servos, you need to consider several parameters when you’re choosing an electric motor:</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p title="The operating voltage"><span class="title"><strong><span class="strong"><strong>The operating voltage</strong></span></strong></span>. This can vary, from 3 V to more than 12 V.</p></li><li class="listitem"><p title="The current without a load"><span class="title"><strong><span class="strong"><strong>The current without a load</strong></span></strong></span>. The amount of current the motor uses at its operating voltage while spinning freely, without anything connected to the motor’s shaft.</p></li><li class="listitem"><p title="The stall current"><span class="title"><strong><span class="strong"><strong>The stall current</strong></span></strong></span>. The amount of current used by the motor when it is trying to turn but cannot because of the load on the motor.</p></li><li class="listitem"><p title="The speed at the operating voltage"><span class="title"><strong><span class="strong"><strong>The speed at the operating voltage</strong></span></strong></span>. The motor’s speed in revolutions per minute (RPM).</p></li></ul></div><p>Our example will use a small, inexpensive electric motor with a speed of 8,540 RPM when running on 3 V, similar to the one shown in <a class="xref" href="ch12.html#our_small_electric_motor" title="Figure 12-5. Our small electric motor">Figure 12-5</a>.</p><p>To control our motor, we’ll use a transistor, which was described in <a class="xref" href="ch03.html" title="Chapter 3. First Steps">Chapter 3</a>. Because our motor uses up to 0.7 A of current (more than can be passed by the BC548 transistor), we’ll use a transistor called a Darlington for this project.</p><div class="figure"><a id="our_small_electric_motor"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00214"/><img src="httpatomoreillycomsourcenostarchimages1630198.png.jpg" alt="Our small electric motor"/></div></div><div class="figure-title">Figure 12-5. Our small electric motor</div></div><div class="sect2" title="The TIP120 Darlington Transistor"><div class="titlepage"><div><div><h3 class="title" id="tip120_darlington_transistor">The TIP120 Darlington Transistor</h3></div></div></div><p>A <span class="emphasis"><em>Darlington transistor</em></span> can handle high currents and voltages. The TIP120 Darlington can pass up to 5 A of current at 60 V, which is more than enough to control our small motor. The TIP120 uses a similar schematic symbol as the BC548, as shown in <a class="xref" href="ch12.html#tip120_schematic_symbol" title="Figure 12-6. TIP120 schematic symbol">Figure 12-6</a>, but the TIP120 transistor is physically larger than the BC548.</p><div class="figure"><a id="tip120_schematic_symbol"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00215"/><img src="httpatomoreillycomsourcenostarchimages1630200.png.jpg" alt="TIP120 schematic symbol"/></div></div><div class="figure-title">Figure 12-6. TIP120 schematic symbol</div></div><p><a id="iddle1023" class="indexterm"/><a id="iddle1187" class="indexterm"/><a id="iddle1361" class="indexterm"/><a id="iddle1525" class="indexterm"/>The TIP120 uses the TO-220 housing style, as shown in <a class="xref" href="ch12.html#tip120" title="Figure 12-7. The TIP120">Figure 12-7</a>.</p><div class="figure"><a id="tip120"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00216"/><img src="httpatomoreillycomsourcenostarchimages1630202.png.jpg" alt="The TIP120"/></div></div><div class="figure-title">Figure 12-7. The TIP120</div></div><p>When you’re looking at the TIP120 from the labeled side, the pins from left to right are base (B), collector (C), and emitter (E). The metal heat sink tab is also connected to the collector.</p></div></div><div class="sect1" title="Project #39: Controlling the Motor"><div class="titlepage"><div><div><h2 class="title" style="clear: both" id="project_hash39_controlling_the_motor">Project #39: Controlling the Motor</h2></div></div></div><p>In this project, we’ll control the motor by adjusting the speed.</p><div class="sect2" title="The Hardware"><div class="titlepage"><div><div><h3 class="title" id="hardware-id00101">The Hardware</h3></div></div></div><p>The following hardware is required:</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>One small 3 V electric motor</p></li><li class="listitem"><p>One 1 kΩ resistor (R1)</p></li><li class="listitem"><p>One breadboard</p></li><li class="listitem"><p>One 1N4004 diode</p></li><li class="listitem"><p>One TIP120 Darlington transistor</p></li><li class="listitem"><p>A separate 3 V power source</p></li><li class="listitem"><p>Various connecting wires</p></li><li class="listitem"><p>Arduino and USB cable</p></li></ul></div><p>When working with motors, you must use a separate power source for them, because the Arduino cannot supply enough current for the motor in all possible situations. If the motor becomes stuck, then it will draw up to its <span class="emphasis"><em>stall current</em></span>, which could be more than 1 amp. That’s more than the Arduino can supply, and if it attempts to supply that much current, the Arduino could be permanently damaged.</p><p>A separate battery pack is a simple solution. For a 3 V supply, a two-cell AA battery pack with flying leads will suffice, such as the one shown in <a class="xref" href="ch12.html#two-cell_aa_battery_pack" title="Figure 12-8. Two-cell AA battery pack">Figure 12-8</a>.</p><div class="figure"><a id="two-cell_aa_battery_pack"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00217"/><img src="httpatomoreillycomsourcenostarchimages1630204.png.jpg" alt="Two-cell AA battery pack"/></div></div><div class="figure-title">Figure 12-8. Two-cell AA battery pack</div></div></div><div class="sect2" title="The Schematic"><div class="titlepage"><div><div><h3 class="title" id="schematic-id00102">The Schematic</h3></div></div></div><p>Assemble the circuit as shown in the schematic in <a class="xref" href="ch12.html#schematic_for_project_39" title="Figure 12-9. Schematic for Project 39">Figure 12-9</a>.</p><div class="figure"><a id="schematic_for_project_39"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00218"/><img src="httpatomoreillycomsourcenostarchimages1630206.png.jpg" alt="Schematic for Project 39"/></div></div><div class="figure-title">Figure 12-9. Schematic for Project 39</div></div></div><div class="sect2" title="The Sketch"><div class="titlepage"><div><div><h3 class="title" id="sketch-id00103">The Sketch</h3></div></div></div><p>In this project, we’ll adjust the speed of the motor from still (zero) to the maximum and then reduce it back to zero. Enter and upload the following sketch:</p><a id="pro_id00129"/><pre class="programlisting">  // Project 39 - Controlling the Motor
+
+  void setup()
+  {
+    pinMode(5, OUTPUT);
+  }
+
+  void loop()
+  {
+<span class="gray-background">1</span>   for (int a=0; a&lt;256; a++)
+    {
+      analogWrite(5, a);
+<span class="gray-background">2</span>     delay(100);
+    }
+<span class="gray-background">3</span>   delay(5000);
+<span class="gray-background">4</span>   for (int a=255; a&gt;=0; a--)
+    {
+      analogWrite(5,a);
+      delay(100);
+    }
+    delay(5000);
+  }</pre><p>We control the speed of the motor using pulse-width modulation (as explained in Project 3). Recall that we can do this only with digital pins 3, 5, 6, 9, 10, and 11. Using this method, current is applied to the motor in short bursts: the longer the burst, the faster the speed, as the motor is on more than it is off during a set period of time. So at <span class="gray-background">1</span>, the motor speed starts from still and increases slowly; you can control the acceleration by changing the <code class="literal">delay</code> value at <span class="gray-background">2</span>. At <span class="gray-background">3</span>, the motor is running as fast as possible and holds that speed for 5 seconds. Then, from <span class="gray-background">4</span>, the process reverses and the motor slows to a stop.</p><div class="note" title="Note"><h3 class="title"><a id="ch12note01"/>Note</h3><p><span class="emphasis"><em>When it starts moving, you may hear a whine from the motor, which sounds similar to the sound of an electric train or a tram when it moves away from a station. This is normal and nothing to worry about.</em></span></p></div><p><a id="iddle1384" class="indexterm"/><a id="iddle1499" class="indexterm"/><a id="iddle1500" class="indexterm"/>The diode is used in the same way it was with the relay control circuit described in <a class="xref" href="ch03.html#relay_control_circuit" title="Figure 3-19. Relay control circuit">Figure 3-19</a> to protect the circuit. When the current is switched off from the motor, stray current exists for a brief amount of time inside the motor’s coil and has to go somewhere. The diode allows the stray current to loop around through the coil until it dissipates as a tiny amount of heat.</p></div></div><div class="sect1" title="Project #40: Building and Controlling a Tank Robot"><div class="titlepage"><div><div><h2 class="title" style="clear: both" id="project_hash40_building_and_controlling">Project #40: Building and Controlling a Tank Robot</h2></div></div></div><p>Although controlling the speed of one motor can be useful, let’s move into more interesting territory by controlling two motors at once to affect their speed <span class="emphasis"><em>and</em></span> direction. Our goal is to describe the construction of a tank-style robot that we’ll continue to work on in the next few chapters. Here we’ll describe the construction and basic control of our tank.</p><p>Our tank has two motors that each control one tread, allowing it to climb over small obstacles, rotate in one position, and not crash into obstacles as it travels. You will be able to control the speed and direction of travel, and you will also learn how to add parts for collision avoidance and remote control. Once you have completed the projects in this book, you will have a solid foundation for creating your own versions and bringing your ideas to life.</p><div class="sect2" title="The Hardware"><div class="titlepage"><div><div><h3 class="title" id="hardware-id00104">The Hardware</h3></div></div></div><p>The following hardware is required:</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>One Pololu RP5 Tank Chassis package</p></li><li class="listitem"><p>One Pololu RP5 Chassis plate</p></li><li class="listitem"><p>Six alkaline AA cells</p></li><li class="listitem"><p>One 9 V battery to DC socket cable</p></li><li class="listitem"><p>A DFRobot 2A Arduino Motor Shield</p></li><li class="listitem"><p>Arduino and USB cable</p></li></ul></div><div class="sect3" title="The Chassis"><div class="titlepage"><div><div><h4 class="title" id="chassis">The Chassis</h4></div></div></div><p>The foundation of any robot is a solid chassis containing the motors, drivetrain, and the power supply. An Arduino-powered robot also needs to have room to mount the Arduino and various external parts.</p><p>You can choose from many chassis models available on the market, but we’ll use a tank chassis—the Pololu RP5 series shown in <a class="xref" href="ch12.html#our_tank_chassis" title="Figure 12-10. Our tank chassis">Figure 12-10</a>, which contains two motors.</p><div class="figure"><a id="our_tank_chassis"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00219"/><img src="httpatomoreillycomsourcenostarchimages1630208.png.jpg" alt="Our tank chassis"/></div></div><div class="figure-title">Figure 12-10. Our tank chassis</div></div></div><div class="sect3" title="Two Power Supplies"><div class="titlepage"><div><div><h4 class="title" id="two_power_supplies">Two Power Supplies</h4></div></div></div><p>The Pololu chassis includes a holder for six AA cells, which we’ll use as the power supply for the motors, as shown in <a class="xref" href="ch12.html#battery_holder_with_six_aa_cells" title="Figure 12-11. Battery holder with six AA cells">Figure 12-11</a>. The battery holder sits in the base of the chassis between the motors and gives the robot a low center of gravity.</p><div class="figure"><a id="battery_holder_with_six_aa_cells"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00220"/><img src="httpatomoreillycomsourcenostarchimages1630210.png.jpg" alt="Battery holder with six AA cells"/></div></div><div class="figure-title">Figure 12-11. Battery holder with six AA cells</div></div><p>Although the power supply in <a class="xref" href="ch12.html#battery_holder_with_six_aa_cells" title="Figure 12-11. Battery holder with six AA cells">Figure 12-11</a> is large, we need to use a separate power supply for our Arduino board, because this power will allow the sketch to keep operating even if the motors fail. The power for the Arduino in this project comes from a 9 V battery, which can be connected to the power socket of the Arduino board using the cable shown in <a class="xref" href="ch12.html#battery_cable_used_to_connect_the_batter" title="Figure 12-12. Battery cable used to connect the battery to the Arduino">Figure 12-12</a>.</p><div class="figure"><a id="battery_cable_used_to_connect_the_batter"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00221"/><img src="httpatomoreillycomsourcenostarchimages1630212.png.jpg" alt="Battery cable used to connect the battery to the Arduino"/></div></div><div class="figure-title">Figure 12-12. Battery cable used to connect the battery to the Arduino</div></div></div><div class="sect3" title="The Mounting Plate"><div class="titlepage"><div><div><h4 class="title" id="mounting_plate">The Mounting Plate</h4></div></div></div><p>The last part of our chassis is the <span class="emphasis"><em>mounting plate</em></span>, which is shown in <a class="xref" href="ch12.html#mounting_plate-id00105" title="Figure 12-13. Mounting plate">Figure 12-13</a>.</p><div class="figure"><a id="mounting_plate-id00105"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00222"/><img src="httpatomoreillycomsourcenostarchimages1630214.png.jpg" alt="Mounting plate"/></div></div><div class="figure-title">Figure 12-13. Mounting plate</div></div><p>The mounting plate covers the top of the chassis and allows you to bolt items on top using spacers and matching <span class="emphasis"><em>M3 screws</em></span>. (Screws, spacers, and washers should be available from a robotics parts supplier or a large hardware store.) In <a class="xref" href="ch12.html#arduino_mounted_on_the_plate" title="Figure 12-14. Arduino mounted on the plate">Figure 12-14</a>, you can see the mounting plate’s spacers already fitted to hold our Arduino board.</p><div class="figure"><a id="arduino_mounted_on_the_plate"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00223"/><img src="httpatomoreillycomsourcenostarchimages1630216.png.jpg" alt="Arduino mounted on the plate"/></div></div><div class="figure-title">Figure 12-14. Arduino mounted on the plate</div></div></div></div><div class="sect2" title="The Schematic"><div class="titlepage"><div><div><h3 class="title" id="schematic-id00106">The Schematic</h3></div></div></div><p><a id="iddle1363" class="indexterm"/>The final requirement is to create the circuitry to control the two motors in the chassis. Although we could use the circuitry shown in <a class="xref" href="ch12.html#schematic_for_project_39" title="Figure 12-9. Schematic for Project 39">Figure 12-9</a> for each of the motors, this wouldn’t allow us to control the direction of the motor and could be somewhat inconvenient to wire up ourselves. Instead, we use a <span class="emphasis"><em>motor shield</em></span>. A motor shield contains the circuitry we need to handle the higher current drawn by the motors and also accepts commands from the Arduino to control the speed and direction of both motors. For our tank, we’ll use a 2A Motor Shield for Arduino from DFRobot (<span class="emphasis"><em><a class="ulink" href="http://www.dfrobot.com/" target="_top">http://www.dfrobot.com/</a></em></span>), as shown in <a class="xref" href="ch12.html#dfrobot_motor_shield" title="Figure 12-15. DFRobot motor shield">Figure 12-15</a>.</p><div class="figure"><a id="dfrobot_motor_shield"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00224"/><img src="httpatomoreillycomsourcenostarchimages1630218.png.jpg" alt="DFRobot motor shield"/></div></div><div class="figure-title">Figure 12-15. DFRobot motor shield</div></div><div class="sect3" title="Connecting the Motor Shield"><div class="titlepage"><div><div><h4 class="title" id="connecting_the_motor_shield">Connecting the Motor Shield</h4></div></div></div><p><a id="iddle1364" class="indexterm"/>Making the required connections to the motor shield is simple: Connect the wires from the battery pack to the terminal block at the bottom-left of the shield, as shown in <a class="xref" href="ch12.html#dc_power_connection" title="Figure 12-16. DC power connection">Figure 12-16</a>. The black wire (negative) must be on the right side and the red wire on the left.</p><p>Next connect the two pairs of wires from the motors. Make sure the colors of the wires match the connections, as shown in <a class="xref" href="ch12.html#connecting_the_motors" title="Figure 12-17. Connecting the motors">Figure 12-17</a>.</p><div class="figure"><a id="dc_power_connection"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00225"/><img src="httpatomoreillycomsourcenostarchimages1630220.png.jpg" alt="DC power connection"/></div></div><div class="figure-title">Figure 12-16. DC power connection</div></div><div class="figure"><a id="connecting_the_motors"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00226"/><img src="httpatomoreillycomsourcenostarchimages1630222.png.jpg" alt="Connecting the motors"/></div></div><div class="figure-title">Figure 12-17. Connecting the motors</div></div></div><div class="sect3" title="Connecting the Jumpers"><div class="titlepage"><div><div><h4 class="title" id="connecting_the_jumpers">Connecting the Jumpers</h4></div></div></div><p>The final task to set up the shield is to connect the appropriate jumpers. Look between the DC power connection and the bottom row of sockets on the shield, and you should see six pins with two black jumpers. Place them horizontally so that they cover the four pins on the left, as shown in <a class="xref" href="ch12.html#setting_the_correct_power_jumpers" title="Figure 12-18. Setting the correct power jumpers">Figure 12-18</a>. Lastly, ensure that the four jumpers are connected vertically across the PWM jumpers, as shown in <a class="xref" href="ch12.html#setting_the_correct_mode_jumpers" title="Figure 12-19. Setting the correct mode jumpers">Figure 12-19</a>.</p><div class="figure"><a id="setting_the_correct_power_jumpers"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00227"/><img src="httpatomoreillycomsourcenostarchimages1630224.png.jpg" alt="Setting the correct power jumpers"/></div></div><div class="figure-title">Figure 12-18. Setting the correct power jumpers</div></div><div class="figure"><a id="setting_the_correct_mode_jumpers"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00228"/><img src="httpatomoreillycomsourcenostarchimages1630226.png.jpg" alt="Setting the correct mode jumpers"/></div></div><div class="figure-title">Figure 12-19. Setting the correct mode jumpers</div></div><p>If your motor’s wires are not color-coded, you may have to swap them after the first run to determine which way is forward or backward.</p><p>After you’ve connected the wiring and jumpers, inserted the battery pack, fitted the Arduino and shield to the mounting plate, and fastened it to the chassis, your tank should look something like the one in <a class="xref" href="ch12.html#our_tank_bot_is_ready_for_actionexclamat" title="Figure 12-20. Our tank bot is ready for action!">Figure 12-20</a>.</p><div class="figure"><a id="our_tank_bot_is_ready_for_actionexclamat"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00229"/><img src="httpatomoreillycomsourcenostarchimages1630228.png.jpg" alt="Our tank bot is ready for action!"/></div></div><div class="figure-title">Figure 12-20. Our tank bot is ready for action!</div></div></div></div><div class="sect2" title="The Sketch"><div class="titlepage"><div><div><h3 class="title" id="sketch-id00107">The Sketch</h3></div></div></div><p>Now to get the tank moving. To begin, let’s create some functions to simplify the movements. Because two motors are involved, we’ll need four movements:</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>Forward motion</p></li><li class="listitem"><p>Reverse motion</p></li><li class="listitem"><p>Rotate clockwise</p></li><li class="listitem"><p>Rotate counterclockwise</p></li></ul></div><p>Our motor shield controls each motor with two digital pins: One pin is for speed control using PWM (as demonstrated in Project 39), and the other determines the direction the motor will turn.</p><p>Four functions in our sketch match our four movements: <code class="literal">goForward()</code>, <code class="literal">goBackward()</code>, <code class="literal">rotateLeft()</code>, and <code class="literal">rotateRight()</code>. Each accepts a value in milliseconds, which is the length of time required to operate the movement, and a PWM speed value between 0 and 255. For example, to move forward for 2 seconds at full speed, we’d use <code class="literal">goForward(2000,255)</code>.</p><p>Enter and save the following sketch (but don’t upload it just yet):</p><a id="pro_id00130"/><pre class="programlisting">  // Project 40 - Building and Controlling a Tank Robot
+
+  int m1speed=6; // digital pins for speed control
+  int m2speed=5;
+  int m1direction=7; // digital pins for direction control
+  int m2direction=4;
+
+  void setup()
+  {
+    pinMode(m1direction, OUTPUT);
+    pinMode(m2direction, OUTPUT);
+    delay(5000);
+  }
+
+  void goForward(int duration, int pwm)
+  {
+<span class="gray-background">1</span>   digitalWrite(m1direction,HIGH); // forward
+    digitalWrite(m2direction,HIGH); // forward
+    analogWrite(m1speed, pwm); // speed
+    analogWrite(m2speed, pwm);
+    delay(duration);
+    analogWrite(m1speed, 0); // speed
+    analogWrite(m2speed, 0);
+  }
+
+  void goBackward(int duration, int pwm)
+  {
+    digitalWrite(m1direction,LOW); // backward
+<span class="gray-background">2</span>   digitalWrite(m2direction,LOW); // backward
+    analogWrite(m1speed, pwm); // speed
+    analogWrite(m2speed, pwm);
+    delay(duration);
+    analogWrite(m1speed, 0); // speed
+    analogWrite(m2speed, 0);
+  }
+
+  void rotateRight(int duration, int pwm)
+  {
+<span class="gray-background">3</span>   digitalWrite(m1direction,HIGH); // forward<span class="strong"><strong/></span>
+    digitalWrite(m2direction,LOW); // backward
+    analogWrite(m1speed, pwm); // speed
+    analogWrite(m2speed, pwm);
+    delay(duration);
+    analogWrite(m1speed, 0); // speed
+    analogWrite(m2speed, 0);
+  }
+
+  void rotateLeft(int duration, int pwm)
+  {
+<span class="gray-background">4</span>   digitalWrite(m1direction,LOW); // backward
+    digitalWrite(m2direction,HIGH); // forward
+    analogWrite(m1speed, pwm); // speed
+    analogWrite(m2speed, pwm);
+    delay(duration);
+    analogWrite(m1speed, 0); // speed
+    analogWrite(m2speed, 0);
+  }
+
+  void loop()
+  {
+    goForward(1000, 255);
+    rotateLeft(1000, 255);
+    goForward(1000, 255);
+    rotateRight(1000, 255);
+    goForward(1000, 255);
+    goBackward(2000, 255);
+    delay(2000);
+  }</pre><p>In the sketch, we set the direction of travel for each motor using</p><a id="pro_id00131"/><pre class="programlisting">digitalWrite(m1direction,<span class="emphasis"><em>direction</em></span>);</pre><p>The value for <code class="literal">direction</code> is <code class="literal">HIGH</code> for forward or <code class="literal">LOW</code> for backward. Therefore, to make the tank move forward, we set both motors the same way, which has been done at <span class="gray-background">1</span> and <span class="gray-background">2</span>. Next we set the speed of the motor using the following:</p><a id="pro_id00132"/><pre class="programlisting">analogWrite(m1speed, <span class="emphasis"><em>pwm</em></span>);</pre><p>The value for <span class="emphasis"><em><code class="literal">pwm</code></em></span> is the speed, between 0 and 255. To make the tank rotate left or right, the motors must be set in opposite directions, as shown at <span class="gray-background">3</span> and <span class="gray-background">4</span>.</p><div class="warning" title="Warning" epub:type="warning"><h3 class="title"><a id="ch12note02"/>Warning</h3><p><span class="emphasis"><em>When you’re ready to upload the sketch, position the tank either by holding it off your work surface or by propping it up so that its treads aren’t in contact with a surface; if you don’t do this, then when the sketch upload completes, the tank will burst into life and leap off your desk after 5 seconds!</em></span></p></div><p>Upload the sketch, remove the USB cable, and connect the battery cable to the Arduino power socket. Then place the tank on carpet or a clean surface, and let it drive about. Experiment with the movement functions in Project 40 to control your tank; this will help you become familiar with the time delays and how they relate to distance traveled.</p></div></div><div class="sect1" title="Sensing Collisions"><div class="titlepage"><div><div><h2 class="title" style="clear: both" id="sensing_collisions">Sensing Collisions</h2></div></div></div><p><a id="iddle1184" class="indexterm"/><a id="iddle1354" class="indexterm"/>Now that our tank can move, we can start to add basic intelligence, such as collision sensors that can tell the tank when it has bumped into something or that can measure the distance between the tank and an object in its path so that it can avoid a crash. We’ll use three methods of collision avoidance: microswitches, infrared, and ultrasonic.</p></div><div class="sect1" title="Project #41: Detecting Tank Bot Collisions with a Microswitch"><div class="titlepage"><div><div><h2 class="title" style="clear: both" id="project_hash41_detecting_tank_bot_collis">Project #41: Detecting Tank Bot Collisions with a Microswitch</h2></div></div></div><p>A <span class="emphasis"><em>microswitch</em></span> can act like the simple push button we used in <a class="xref" href="ch04.html" title="Chapter 4. Building Blocks">Chapter 4</a>, but the microswitch component is physically larger and includes a large metal bar that serves as the actuator (see <a class="xref" href="ch12.html#microswitch" title="Figure 12-21. Microswitch">Figure 12-21</a>).</p><div class="figure"><a id="microswitch"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00230"/><img src="httpatomoreillycomsourcenostarchimages1630230.png.jpg" alt="Microswitch"/></div></div><div class="figure-title">Figure 12-21. Microswitch</div></div><p>When using the microswitch, you connect one wire to the bottom contact and the other to the contact labeled “NO” (normally open) to ensure that current flows only when the bar is pressed. We’ll mount the microswitch on the front of our tank, and when the tank hits an object, the bar will be pressed, causing current to flow and making the tank reverse direction or take another action.</p><div class="sect2" title="The Schematic"><div class="titlepage"><div><div><h3 class="title" id="schematic-id00108">The Schematic</h3></div></div></div><p>The microswitch hardware is wired like a single push button, as shown in <a class="xref" href="ch12.html#microswitch_collision_detector_schematic" title="Figure 12-22. The microswitch collision detector schematic">Figure 12-22</a>.</p><div class="figure"><a id="microswitch_collision_detector_schematic"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00231"/><img src="httpatomoreillycomsourcenostarchimages1630232.png.jpg" alt="The microswitch collision detector schematic"/></div></div><div class="figure-title">Figure 12-22. The microswitch collision detector schematic</div></div></div><div class="sect2" title="The Sketch"><div class="titlepage"><div><div><h3 class="title" id="sketch-id00109">The Sketch</h3></div></div></div><p><a id="iddle1185" class="indexterm"/><a id="iddle1355" class="indexterm"/>We connect the microswitch to an interrupts port (digital pin 2). Although you might think we should have a function called by the interrupt to make the tank reverse for a few moments, that’s not possible, because the <code class="literal">delay()</code> function doesn’t operate inside functions called by interrupts. We have to think a little differently in this case.</p><p>Instead, the function <code class="literal">goForward()</code> will turn on the motors if two conditions are met for the variables <code class="literal">crash</code> and the Boolean <code class="literal">move</code>. If <code class="literal">crash</code> is <code class="literal">true</code>, the motors will reverse at a slower speed for 2 seconds to “back out” from a collision situation.</p><p>We can’t use <code class="literal">delay()</code> functions because of the interrupt, so we measure the amount of time that the motors run reading <code class="literal">millis()</code> at the start and compare that against the current value of <code class="literal">millis()</code>. When the difference is greater than or equal to the required duration, <code class="literal">move</code> is set to <code class="literal">false</code> and the motors stop.</p><p>Enter and upload the following sketch:</p><a id="pro_id00133"/><pre class="programlisting">  // Project 41 – Detecting Tank Bot Collisions with a Microswitch
+
+  int m1speed=6; // digital pins for speed control
+  int m2speed=5;
+  int m1direction=7; // digital pins for direction control
+  int m2direction=4;
+  boolean crash=false;
+
+  void setup()
+  {
+    pinMode(m1direction, OUTPUT);
+    pinMode(m2direction, OUTPUT);
+    attachInterrupt(0, backOut, RISING);
+    delay(5000);
+  }
+
+<span class="gray-background">1</span> void backOut()<span class="strong"><strong/></span>
+  {
+    crash=true;
+  }
+
+<span class="gray-background">2</span> void backUp()
+  {
+     digitalWrite(m1direction,LOW); // reverse
+     digitalWrite(m2direction,LOW); // reverse
+     analogWrite(m1speed, 200); // speed
+     analogWrite(m2speed, 200);
+     delay(2000);
+     analogWrite(m1speed, 0); // speed
+     analogWrite(m2speed, 0);
+  }
+
+  void goForward(int duration, int pwm)
+  {
+    long a,b;
+    boolean move=true;
+<span class="gray-background">3</span>   a=millis();
+    do
+    {
+      if (crash==false)
+      {
+        digitalWrite(m1direction,HIGH); // forward
+        digitalWrite(m2direction,HIGH); // forward
+        analogWrite(m1speed, pwm); // speed
+        analogWrite(m2speed, pwm);
+      }
+      if (crash==true)
+      {
+        backUp();
+        crash=false;
+      }
+<span class="gray-background">4</span>     b=millis()-a;
+      if (b&gt;=duration)
+      {
+        move=false;
+      }
+    } while (move!=false);
+    // stop motors
+    analogWrite(m1speed, 0);
+    analogWrite(m2speed, 0);
+  }
+
+  void loop()
+  {
+    goForward(5000, 255);
+    delay(2000);
+  }</pre><p><a id="iddle1274" class="indexterm"/>This sketch uses an advanced method of moving forward, in that two variables are used to monitor movement while the tank bot is in motion. The first is the Boolean variable <code class="literal">crash</code>. If the tank bot bumps into something and activates the microswitch, then an interrupt is called, which runs the function <code class="literal">backOut()</code> at <span class="gray-background">1</span>. It is here that the variable <code class="literal">crash</code> is changed from <code class="literal">false</code> to <code class="literal">true</code>. The second variable that is monitored is the Boolean variable <code class="literal">move</code>. In the function <code class="literal">goForward()</code>, we use <code class="literal">millis()</code> at <span class="gray-background">3</span> to calculate constantly whether the tank bot has finished moving for the required period of time (set by the parameter <code class="literal">duration</code>).</p><p>At <span class="gray-background">4</span>, the function calculates whether the elapsed time is less than the required time, and if so, the variable <code class="literal">move</code> is set to <code class="literal">true</code>. Therefore, the tank bot is allowed to move forward only if it has not crashed and not run out of time. If a crash has been detected, the function <code class="literal">backUp()</code> at <span class="gray-background">2</span> is called, at which point the tank will reverse slowly for 2 seconds and then resume as normal.</p><div class="note" title="Note"><h3 class="title"><a id="ch12note03"/>Note</h3><p><span class="emphasis"><em>You can add the other movement functions from Project 40 to expand or modify this example.</em></span></p></div></div></div><div class="sect1" title="Infrared Distance Sensors"><div class="titlepage"><div><div><h2 class="title" style="clear: both" id="infrared_distance_sensors">Infrared Distance Sensors</h2></div></div></div><p>Our next method of collision avoidance uses an infrared (IR) distance sensor. This sensor bounces an infrared light signal off a surface in front of it and returns a voltage that is relative to the distance between the sensor and the surface. Infrared sensors are useful for collision detection because they are inexpensive, but they’re not ideal for <span class="emphasis"><em>exact</em></span> distance measuring. We’ll use the Sharp GP2Y0A21YK0F analog sensor for our project, as shown in <a class="xref" href="ch12.html#sharp_ir_sensor" title="Figure 12-23. The Sharp IR sensor">Figure 12-23</a>.</p><div class="figure"><a id="sharp_ir_sensor"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00232"/><img src="httpatomoreillycomsourcenostarchimages1630234.png.jpg" alt="The Sharp IR sensor"/></div></div><div class="figure-title">Figure 12-23. The Sharp IR sensor</div></div><div class="sect2" title="Wiring It Up"><div class="titlepage"><div><div><h3 class="title" id="wiring_it_up">Wiring It Up</h3></div></div></div><p><a id="iddle1275" class="indexterm"/>To wire the sensor, connect the red and black wires on the sensor to 5 V and GND, respectively, with the white wire connecting to an analog input pin on your Arduino. We’ll use <code class="literal">analogRead()</code> to measure the voltage returned from the sensor. The graph in <a class="xref" href="ch12.html#graph_of_ir_sensor_distance_versus_outpu" title="Figure 12-24. Graph of IR sensor distance versus output voltage">Figure 12-24</a> shows the relationship between the distance measured and the output voltage.</p><div class="figure"><a id="graph_of_ir_sensor_distance_versus_outpu"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00233"/><img src="httpatomoreillycomsourcenostarchimages1630236.png.jpg" alt="Graph of IR sensor distance versus output voltage"/></div></div><div class="figure-title">Figure 12-24. Graph of IR sensor distance versus output voltage</div></div></div><div class="sect2" title="Testing the IR Distance Sensor"><div class="titlepage"><div><div><h3 class="title" id="testing_the_ir_distance_sensor">Testing the IR Distance Sensor</h3></div></div></div><p>Because the relationship between distance and output is not easily represented with an equation, we’ll categorize the readings into 5 cm stages. To demonstrate this, we’ll use a simple example. Connect your infrared sensor’s <a id="iddle1277" class="indexterm"/>white lead to analog pin 0, the red lead to 5 V, and the black lead to GND, and then enter and upload the sketch shown in <a class="xref" href="ch12.html#ir_sensor_demonstration_sketch" title="Example 12-2. IR sensor demonstration sketch">Example 12-2</a>.</p><div class="example"><a id="ir_sensor_demonstration_sketch"/><div class="example-title">Example 12-2. IR sensor demonstration sketch</div><div class="example-contents"><pre class="programlisting">  // Listing 12-2
+
+  float sensor = 0;
+  int cm = 0;
+
+  void setup()
+  {
+    Serial.begin(9600);
+  }
+
+  void loop()
+  {
+<span class="gray-background">1</span>   sensor = analogRead(0);
+<span class="gray-background">2</span>   if (sensor&lt;=90)
+    {
+      Serial.println("Infinite distance!");
+    } else if (sensor&lt;100) // 80cm
+    {
+      cm = 80;
+    } else if (sensor&lt;110) // 70 cm
+    {
+      cm = 70;
+    } else if (sensor&lt;118) // 60cm
+    {
+      cm = 60;
+    } else if (sensor&lt;147) // 50cm
+    {
+      cm = 50;
+    } else if (sensor&lt;188) // 40 cm
+    {
+      cm = 40;
+    } else if (sensor&lt;230) // 30cm
+    {
+      cm = 30;
+    } else if (sensor&lt;302) // 25 cm
+    {
+      cm = 25;
+    } else if (sensor&lt;360) // 20cm
+    {
+      cm = 20;
+    } else if (sensor&lt;505) // 15cm
+    {
+      cm = 15;
+    } else if (sensor&lt;510) // 10 cm
+    {
+      cm = 10;
+    } else if (sensor&gt;=510) // too close!
+    {
+       Serial.println("Too close!");
+    }
+    Serial.print("Distance: ");
+    Serial.print(cm);
+    Serial.println(" cm");
+    delay(250);
+  }</pre></div></div><p><a id="iddle1126" class="indexterm"/><a id="iddle1276" class="indexterm"/>The sketch reads the voltage from the IR sensor at <span class="gray-background">1</span> and then uses a series of <code class="literal">if</code> statements at <span class="gray-background">2</span> to choose which approximate distance is being returned. We determine the distance from the voltage returned by the sensor using two parameters. The first is the voltage-to-distance relationship as displayed in <a class="xref" href="ch12.html#graph_of_ir_sensor_distance_versus_outpu" title="Figure 12-24. Graph of IR sensor distance versus output voltage">Figure 12-24</a>. Then, using the knowledge (from Project 6) that <code class="literal">analogRead()</code> returns a value between 0 and 1,023 relative to a voltage between 0 and around 5 V, we can calculate the approximate distance returned by the sensor.</p><p>After uploading the sketch, open the Serial Monitor and experiment by moving your hand or a piece of paper at various distances from the sensor. The Serial Monitor should return the approximate distance, as shown in <a class="xref" href="ch12.html#results_of_listing_12-2" title="Figure 12-25. Results of Example 12-2">Figure 12-25</a>.</p><div class="figure"><a id="results_of_listing_12-2"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00234"/><img src="httpatomoreillycomsourcenostarchimages1630238.png.jpg" alt="Results of"/></div></div><div class="figure-title">Figure 12-25. Results of <a class="xref" href="ch12.html#ir_sensor_demonstration_sketch" title="Example 12-2. IR sensor demonstration sketch">Example 12-2</a></div></div></div></div><div class="sect1" title="Project #42: Detecting Tank Bot Collisions with IR Distance Sensor"><div class="titlepage"><div><div><h2 class="title" style="clear: both" id="project_hash42_detecting_tank_bot_collis">Project #42: Detecting Tank Bot Collisions with IR Distance Sensor</h2></div></div></div><p>Now let’s use the IR sensor with our tank bot instead of the microswitch. We’ll use a slightly modified version of Project 41. Instead of using an interrupt, we’ll create the function <code class="literal">checkDistance()</code> that changes the variable <code class="literal">crash</code> to <code class="literal">true</code> if the distance measured by the IR sensor is around 20 cm or less. We’ll use this in the <code class="literal">goForward()</code> forward motion <code class="literal">do... while</code> loop.</p><p>Connect the IR sensor to your tank, and then enter and upload this sketch:</p><a id="pro_id00134"/><pre class="programlisting">  // Project 42 - Detecting Tank Bot Collisions with IR Distance Sensor
+
+  int m1speed=6;     // digital pins for speed control
+  int m2speed=5;
+  int m1direction=7; // digital pins for direction control
+  int m2direction=4;
+  boolean crash=false;
+
+  void setup()
+  {
+    pinMode(m1direction, OUTPUT);
+    pinMode(m2direction, OUTPUT);
+    delay(5000);
+  }
+
+  void backUp()
+  {
+     digitalWrite(m1direction,LOW); // reverse
+     digitalWrite(m2direction,LOW); // reverse
+     analogWrite(m1speed, 200);// speed
+     analogWrite(m2speed, 200);
+     delay(2000);
+     analogWrite(m1speed, 0);// speed
+     analogWrite(m2speed, 0);
+  }
+
+  void checkDistance()
+  {
+<span class="gray-background">1</span>   if (analogRead(0)&gt;460)
+    {
+      crash=true;
+    }
+  }
+
+  void goForward(int duration, int pwm)
+  {
+    long a,b;
+    boolean move=true;
+    a=millis();
+    do
+    {
+      checkDistance();
+      if (crash==false)
+      {
+        digitalWrite(m1direction,HIGH); // forward
+        digitalWrite(m2direction,HIGH); // forward
+        analogWrite(m1speed, pwm); // speed
+        analogWrite(m2speed, pwm);
+      }
+      if (crash==true)
+      {
+        backUp();
+        crash=false;
+      }
+      b=millis()-a;
+      if (b&gt;=duration)
+      {
+        move=false;
+      }
+    } while (move!=false);
+    // stop motors
+    analogWrite(m1speed, 0);
+    analogWrite(m2speed, 0);
+  }
+
+  void loop()
+  {
+    goForward(5000, 255);
+    delay(2000);
+  }</pre><p><a id="iddle1127" class="indexterm"/><a id="iddle1378" class="indexterm"/><a id="iddle1543" class="indexterm"/>This sketch operates using the same methods used in Project 41, except this version constantly takes distance measurements at <span class="gray-background">1</span> and sets the crash variable to <code class="literal">true</code> if the distance between the IR sensor and an object is less than about 20 cm.</p><p>After running the tank and using this sensor, you should see the benefits of using a noncontact collision sensor. It’s simple to add more sensors to the same tank, such as sensors at the front and rear or at each corner. You should be able to add code to check each sensor in turn and make a decision based on the returned distance value.</p></div><div class="sect1" title="Ultrasonic Distance Sensors"><div class="titlepage"><div><div><h2 class="title" style="clear: both" id="ultrasonic_distance_sensors">Ultrasonic Distance Sensors</h2></div></div></div><p>Our final method of collision avoidance is an <span class="emphasis"><em>ultrasonic distance sensor</em></span>. This sensor bounces a sound wave of a frequency (that cannot be heard by the human ear) off a surface and measures the amount of time it takes for the sound to return to the sensor. We’ll use the Parallax Ping))) ultrasonic distance sensor, shown in <a class="xref" href="ch12.html#pingright_parenthesisright_parenthesisri" title="Figure 12-26. The Ping))) ultrasonic distance sensor">Figure 12-26</a>, for this project, because it’s inexpensive and accurate down to 1 cm.</p><div class="figure"><a id="pingright_parenthesisright_parenthesisri"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00235"/><img src="httpatomoreillycomsourcenostarchimages1630240.png.jpg" alt="The Ping))) ultrasonic distance sensor"/></div></div><div class="figure-title">Figure 12-26. The Ping))) ultrasonic distance sensor</div></div><p><a id="iddle1144" class="indexterm"/><a id="iddle1392" class="indexterm"/><a id="iddle1544" class="indexterm"/><a id="iddle1546" class="indexterm"/>An ultrasonic sensor’s accuracy and range mean it can measure distances between 2 and 300 cm. However, because the sound wave needs to be reflected back to the sensor, the sensor must be angled less than 45 degrees away from the direction of travel.</p><div class="sect2" title="Connecting the Ultrasonic Sensor"><div class="titlepage"><div><div><h3 class="title" id="connecting_the_ultrasonic_sensor">Connecting the Ultrasonic Sensor</h3></div></div></div><p>To connect the sensor, attach the 5 V and GND leads to their respective pins, and attach the SIG (short for <span class="emphasis"><em>signal</em></span>) pin to any Arduino digital pin.</p></div><div class="sect2" title="Using the Ultrasonic Sensor"><div class="titlepage"><div><div><h3 class="title" id="using_the_ultrasonic_sensor">Using the Ultrasonic Sensor</h3></div></div></div><p>The ultrasonic sensor takes measurements only when requested to do so. To take a measurement, we send a very short <code class="literal">HIGH</code> signal of 5 microseconds (mS) to the SIG pin. After a moment, the sensor should return a <code class="literal">HIGH</code> signal whose length is the period of time the ultrasonic sound takes to travel from and to the sensor; this value should be halved to determine the actual distance between the sensor and the object.</p><p>We need to use the same digital pin for output and input, and two new functions:</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p title="delayMicroseconds(mS)"><span class="title"><strong><span class="strong"><strong><code class="literal">delayMicroseconds(mS)</code></strong></span></strong></span>. Pauses the Arduino sketch in microseconds (mS)</p></li><li class="listitem"><p title="pulseDuration(pin, HIGH)"><span class="title"><strong><span class="strong"><strong><code class="literal">pulseDuration(</code><span class="emphasis"><em><code class="literal">pin</code></em></span><code class="literal">, HIGH)</code></strong></span></strong></span>. Measures the length of a <code class="literal">HIGH</code> pulse on digital pin <span class="emphasis"><em><code class="literal">pin</code></em></span> and returns the time in microseconds</p></li></ul></div><p>After we have the duration of the incoming pulse, we convert it to centimeters by dividing it by 29.412 (because the speed of sound is 340 meters per second, or 34 cm per millisecond).</p></div><div class="sect2" title="Testing the Ultrasonic Distance Sensor"><div class="titlepage"><div><div><h3 class="title" id="testing_the_ultrasonic_distance_sensor">Testing the Ultrasonic Distance Sensor</h3></div></div></div><p>To simplify using the sensor, we use the function <code class="literal">getDistance()</code> in <a class="xref" href="ch12.html#ultrasonic_sensor_demonstration" title="Example 12-3. Ultrasonic sensor demonstration">Example 12-3</a>. Connect your ultrasonic sensor with the SIG pin to digital pin 3, and then enter and upload the following.</p><div class="example"><a id="ultrasonic_sensor_demonstration"/><div class="example-title">Example 12-3. Ultrasonic sensor demonstration</div><div class="example-contents"><pre class="programlisting">  // Listing 12-3
+
+  int signal=3;
+
+  void setup()
+  {
+    pinMode(signal, OUTPUT);
+    Serial.begin(9600);
+  }
+
+  int getDistance()
+  // returns distance from Ping))) sensor in cm
+  {
+    int distance;
+    unsigned long pulseduration=0;
+
+    // get the raw measurement data from Ping)))
+    // set pin as output so we can send a pulse
+<span class="gray-background">1</span>   pinMode(signal, OUTPUT);
+
+    // set output to LOW
+    digitalWrite(signal, LOW);
+    delayMicroseconds(5);
+
+<span class="gray-background">2</span>   // send the 5uS pulse out to activate Ping)))
+    digitalWrite(signal, HIGH);
+    delayMicroseconds(5);
+    digitalWrite(signal, LOW);
+
+<span class="gray-background">3</span>   // change the digital pin to input to read the incoming pulse
+    pinMode(signal, INPUT);
+
+    // measure the length of the incoming pulse
+    pulseduration=pulseIn(signal, HIGH);
+
+<span class="gray-background">4</span>   // divide the pulse length in half
+    pulseduration=pulseduration/2;
+
+<span class="gray-background">5</span>   // convert to centimeters
+    distance = int(pulseduration/29);
+    return distance;
+  }
+
+  void loop()
+  {
+    Serial.print(getDistance());
+    Serial.println(" cm ");
+    delay(500);
+  }</pre></div></div><p>The distance is returned by the function <code class="literal">int getDistance()</code>. By following <span class="gray-background">1</span> through <span class="gray-background">5</span>, you can see how the pulse is sent to the sensor and then how the time of return is measured, which is used to calculate the distance.</p><p>After uploading the sketch, open the Serial Monitor and move an object toward and away from the sensor. The distance to the object should be returned in centimeters, as shown in <a class="xref" href="ch12.html#results_from_listing_12-3" title="Figure 12-27. Results from Example 12-3">Figure 12-27</a>.</p><div class="figure"><a id="results_from_listing_12-3"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00236"/><img src="httpatomoreillycomsourcenostarchimages1630242.png.jpg" alt="Results from"/></div></div><div class="figure-title">Figure 12-27. Results from <a class="xref" href="ch12.html#ultrasonic_sensor_demonstration" title="Example 12-3. Ultrasonic sensor demonstration">Example 12-3</a></div></div></div></div><div class="sect1" title="Project #43: Detecting Tank Bot Collisions with an Ultrasonic Distance Sensor"><div class="titlepage"><div><div><h2 class="title" style="clear: both" id="project_hash43_detecting_tank_bot_collis">Project #43: Detecting Tank Bot Collisions with an Ultrasonic Distance Sensor</h2></div></div></div><p><a id="iddle1545" class="indexterm"/>Now that you understand how the sensor works, let’s use it with our tank.</p><div class="sect2" title="The Sketch"><div class="titlepage"><div><div><h3 class="title" id="sketch-id00110">The Sketch</h3></div></div></div><p>We can use the <code class="literal">getDistance()</code> function from <a class="xref" href="ch12.html#ultrasonic_sensor_demonstration" title="Example 12-3. Ultrasonic sensor demonstration">Example 12-3</a> to create a test for impending collision. In the following sketch, we check for distances of less than 10 cm, which will give the tank a reason to back up. Enter and upload the following sketch to see for yourself:</p><a id="pro_id00135"/><pre class="programlisting">  // Project 43 - Detecting Tank Bot Collisions with an Ultrasonic Distance
+  // Sensor
+
+  int m1speed=6; // digital pins for speed control
+  int m2speed=5;
+  int m1direction=7; // digital pins for direction control
+  int m2direction=4;
+  int signal=3;
+  boolean crash=false;
+
+  void setup()
+  {
+    pinMode(m1direction, OUTPUT);
+    pinMode(m2direction, OUTPUT);
+    pinMode(signal, OUTPUT);
+    delay(5000);
+    Serial.begin(9600);
+  }
+  
+  int getDistance()
+  // returns distance from Ping))) sensor in cm
+  {
+    int distance;
+    unsigned long pulseduration=0;
+
+    // get the raw measurement data from Ping)))
+    // set pin as output so we can send a pulse
+    pinMode(signal, OUTPUT);
+
+    // set output to LOW
+    digitalWrite(signal, LOW);
+    delayMicroseconds(5);
+
+    // send the 5uS pulse out to activate Ping)))
+    digitalWrite(signal, HIGH);
+    delayMicroseconds(5);
+    digitalWrite(signal, LOW);
+
+    // change the digital pin to input to read the incoming pulse
+    pinMode(signal, INPUT);
+
+    // measure the length of the incoming pulse
+    pulseduration=pulseIn(signal, HIGH);
+
+    // divide the pulse length in half
+    pulseduration=pulseduration/2;
+
+    // convert to centimeters
+    distance = int(pulseduration/29);
+    return distance;
+  }
+
+  void backUp()
+  {
+     digitalWrite(m1direction,LOW); // go back
+     digitalWrite(m2direction,LOW);
+     delay(2000);
+     digitalWrite(m1direction,HIGH); // go left
+     digitalWrite(m2direction,LOW);
+     analogWrite(m1speed, 200); // speed
+     analogWrite(m2speed, 200);
+     delay(2000);
+     analogWrite(m1speed, 0); // speed
+     analogWrite(m2speed, 0);
+  }
+
+  void goForward(int duration, int pwm)
+  {
+    long a,b;
+    int dist=0;
+    boolean move=true;
+    a=millis();
+    do
+      {
+      dist=getDistance();
+      Serial.println(dist);
+<span class="gray-background">1</span>     if (dist&lt;10) // if less than 10cm from object
+      {
+        crash=true;
+      }
+      if (crash==false)
+      {
+        digitalWrite(m1direction,HIGH); // forward
+        digitalWrite(m2direction,HIGH); // forward
+        analogWrite(m1speed, pwm); // speed
+        analogWrite(m2speed, pwm);
+      }
+      if (crash==true)
+      {
+        backUp();
+        crash=false;
+      }
+      b=millis()-a;
+      if (b&gt;=duration)
+      {
+        move=false;
+      }
+    } while (move!=false);
+    // stop motors
+    analogWrite(m1speed, 0);
+    analogWrite(m2speed, 0);
+  }
+
+  void loop()
+  {
+    goForward(1000, 255);
+  }</pre><p>Once again, we constantly measure the distance at <span class="gray-background">1</span> and then change the variable <code class="literal">crash</code> to <code class="literal">true</code> if the distance between the ultrasonic sensor and object is less than 10 cm. Watching the tank magically avoid colliding with things or having a battle of wits with a pet can be quite amazing.</p></div></div><div class="sect1" title="Looking Ahead"><div class="titlepage"><div><div><h2 class="title" style="clear: both" id="looking_ahead-id00111">Looking Ahead</h2></div></div></div><p>In this chapter you learned how to introduce your Arduino-based projects to the world of movement. Using simple motors, or pairs of motors, with the motor shield, you can create projects that can move on their own and even avoid obstacles. We used three types of sensors to demonstrate a range of accuracies and sensor costs, so you can now make decisions based on your requirements and project budget.</p><p>By now, I hope you are experiencing and enjoying the ability to design and construct such things. But it doesn’t stop here. In the next chapter, we move outdoors and harness the power of satellite navigation.</p></div></section></body></html>

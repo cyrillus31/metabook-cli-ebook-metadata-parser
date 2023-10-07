@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:pls="http://www.w3.org/2005/01/pronunciation-lexicon" xmlns:ssml="http://www.w3.org/2001/10/synthesis" xmlns:svg="http://www.w3.org/2000/svg"><head><title>Chapter 20. Cellular Communications</title><link rel="stylesheet" type="text/css" href="core.css"/><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"/><link rel="up" href="index.html" title="Arduino Workshop: A hands-on introduction with 65 projects"/><link rel="prev" href="ch19.html" title="Chapter 19. The Internet"/><link rel="next" href="ix01.html" title="Index"/></head><body><section class="chapter" title="Chapter 20. Cellular Communications" epub:type="chapter" id="cellular_communications"><div class="titlepage"><div><div><h2 class="title">Chapter 20. Cellular Communications</h2></div></div></div><p><a id="iddle1122" class="indexterm"/>In this chapter you will</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>Have your Arduino dial a telephone number when an event occurs</p></li><li class="listitem"><p>Send a text message to a cell phone using the Arduino</p></li><li class="listitem"><p>Control devices connected to an Arduino via text message from a cell phone</p></li></ul></div><p>You can connect your Arduino projects to a cell phone network to allow simple communication between your Arduino and a cellular or landline phone. With a little imagination, you can come up with many uses for this type of communication, including some of the projects included in this chapter.</p><p>Be sure to review this chapter before you purchase any hardware, because the success of the projects will depend on your cellular network. Your network must be able to</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>Operate at GSM 850 MHz, GSM 900 MHz, DCS 1800 MHz, or PCS 1900 MHz</p></li><li class="listitem"><p>Allow the use of devices not supplied by the network provider</p></li></ul></div><p><a id="iddle1117" class="indexterm"/><a id="iddle1120" class="indexterm"/>Cell networks operating in the European Union, Australia, and New Zealand can usually accommodate these requirements. If you’re in the United States and Canada, call your cell provider to ensure that these requirements can be met before you commit to the hardware.</p><p>To make use of these projects, you might consider selecting either a prepaid calling plan or a plan that offers a lot of included text messages, in case an error in your sketch causes the project to send out several SMS (Short Message Service) text messages. Also, make sure the requirement to enter a PIN to use the SIM card is turned off. (You should be able to do this easily by inserting the SIM card in a regular cell phone and changing the setting in the security menu.)</p><div class="sect1" title="The Hardware"><div class="titlepage"><div><div><h2 class="title" style="clear: both" id="hardware-id00164">The Hardware</h2></div></div></div><p>Because of hardware restrictions, the projects in this chapter will function only with an Arduino Uno or compatible board (that means no Arduino Mega boards). All the projects use a common hardware configuration, so we’ll set that up first.</p><p>You’ll need specific hardware to complete the projects in this chapter, starting with an SM5100 GSM shield and antenna, shown in <a class="xref" href="ch20.html#gsm_shield_with_antenna_attached" title="Figure 20-1. GSM shield with antenna attached">Figure 20-1</a>. This shield is available from SparkFun and its distributors. (Look for shield part number CEL-09607, stackable header set PRT-10007, and antenna part number CEL-00675.)</p><div class="figure"><a id="gsm_shield_with_antenna_attached"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00298"/><img src="httpatomoreillycomsourcenostarchimages1630366.png.jpg" alt="GSM shield with antenna attached"/></div></div><div class="figure-title">Figure 20-1. GSM shield with antenna attached</div></div><p><a id="iddle1121" class="indexterm"/>You’ll also need a power shield and supply. The GSM shield draws up to 2 A of current (more than is available from the Arduino) and will damage your Arduino if it’s used without external power. An Arduino-compatible power shield is available from DFRobot at <span class="emphasis"><em><a class="ulink" href="http://www.dfrobot.com/" target="_top">http://www.dfrobot.com/</a></em></span>, part number DFR0105, and shown in <a class="xref" href="ch20.html#dfrobot_power_shield" title="Figure 20-2. DFRobot power shield">Figure 20-2</a>.</p><div class="figure"><a id="dfrobot_power_shield"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00299"/><img src="httpatomoreillycomsourcenostarchimages1630368.png.jpg" alt="DFRobot power shield"/></div></div><div class="figure-title">Figure 20-2. DFRobot power shield</div></div><p>Finally, you’ll need an external power supply. This can be a DC plug pack or wall wart power supply brick (or a large 7.2 V rechargeable battery, solar panel/battery source, 12 V battery, or similar, as long as it doesn’t exceed 35 V DC) that can offer up to 2 A of current.</p><div class="sect2" title="Preparing the Power Shield"><div class="titlepage"><div><div><h3 class="title" id="preparing_the_power_shield">Preparing the Power Shield</h3></div></div></div><p>Prepare the power shield, and (this is important) <span class="emphasis"><em>set its output voltage for use before attaching it to any other parts</em></span>. To do this, first remove the jumpers over the top-right and bottom-right header pins (circled on the right side of <a class="xref" href="ch20.html#dfrobot_power_shield" title="Figure 20-2. DFRobot power shield">Figure 20-2</a>). Next, ensure that the two jumpers are set horizontally across the PWRIN pairs at the bottom-left of the shield (circled at the bottom of <a class="xref" href="ch20.html#dfrobot_power_shield" title="Figure 20-2. DFRobot power shield">Figure 20-2</a>).</p><p>Now connect your external power supply to the PWRIN terminal block at the bottom-left corner of the power shield. Make sure to match the positive (+) and negative (−) wires correctly. Then turn on the power, and measure the voltage at the PWROUT terminal block at the top-left of the shield while using a small screwdriver to adjust the blue potentiometer, shown in <a class="xref" href="ch20.html#power_shield_voltage_adjust_potentiomete" title="Figure 20-3. Power shield voltage adjust potentiometer">Figure 20-3</a>.</p><div class="figure"><a id="power_shield_voltage_adjust_potentiomete"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00300"/><img src="httpatomoreillycomsourcenostarchimages1630370.png.jpg" alt="Power shield voltage adjust potentiometer"/></div></div><div class="figure-title">Figure 20-3. Power shield voltage adjust potentiometer</div></div><p><a id="iddle1119" class="indexterm"/>Continue these adjustments until the voltage measured by the multimeter from the power shield is 5.0 V DC. When you’re done adjusting, turn off the power supply shield.</p><p>Now you can put the pieces together:</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Insert the SIM card into the GSM shield.</p></li><li class="listitem"><p>Plug the GSM shield into the Arduino Uno.</p></li><li class="listitem"><p>Add the power shield on top.</p></li><li class="listitem"><p>Run a small wire from the positive PWROUT terminal block on the power shield to the 5V pin on the shield, and run another wire from the negative PWROUT terminal block to the GND pin on the power shield. These two wires will feed the high-capacity 5 V power from the power shield into the Arduino.</p></li></ol></div><div class="warning" title="Warning" epub:type="warning"><h3 class="title"><a id="ch20note01"/>Warning</h3><p><span class="emphasis"><em>Always ensure that power is applied to the project before connecting the USB cable between the Arduino and the computer. And always remove the USB cable before turning off the external power to the shield.</em></span></p></div></div><div class="sect2" title="Hardware Configuration and Testing"><div class="titlepage"><div><div><h3 class="title" id="hardware_configuration_and_testing">Hardware Configuration and Testing</h3></div></div></div><p>Now let’s configure and test the hardware by making sure that the GSM module can communicate with the cellular network and the Arduino. After assembling the hardware and the SIM card, enter and upload the sketch shown in <a class="xref" href="ch20.html#gsm_shield_test_sketch" title="Example 20-1. GSM shield test sketch">Example 20-1</a>.</p><div class="example"><a id="gsm_shield_test_sketch"/><div class="example-title">Example 20-1. GSM shield test sketch</div><div class="example-contents"><pre class="programlisting">  // Listing 20-1
+  // Written by Ryan Owens - SparkFun CC by v3.0 3/8/10
+
+<span class="gray-background">1</span> #include &lt;SoftwareSerial.h&gt; // Virtual serial port
+<span class="gray-background">2</span> SoftwareSerial cell(2,3);
+  char incoming_char = 0;
+
+  void setup()
+  {
+    //Initialize serial ports for communication.
+    Serial.begin(9600);
+<span class="gray-background">3</span>   cell.begin(9600);
+    Serial.println("Starting SM5100B Communication...");
+  }
+
+  void loop()
+  {
+    //If a character comes in from the cellular module...
+    if( cell.available() &gt; 0 )
+    {
+      //Get the character from the cellular serial port.
+      incoming_char = cell.read();
+      //Print the incoming character to the terminal.
+      Serial.print(incoming_char);
+    }
+    //If a character is coming from the terminal to the Arduino...
+    if( Serial.available() &gt; 0 )
+    {
+      incoming_char = Serial.read();//Get the character coming from the terminal
+      cell.print(incoming_char);    //Send the character to the cellular module.
+    }
+  }</pre></div></div><p><a id="iddle1477" class="indexterm"/><a id="iddle1560" class="indexterm"/>This sketch simply relays all the information coming from the GSM shield to the Serial Monitor. The GSM shield has a serial connection between it and Arduino digital pins 2 and 3 so that it won’t interfere with the normal serial port between the Arduino and the PC, which is on digital pins 0 and 1. We set up a <code class="literal">SoftwareSerial</code> virtual serial port for the GSM shield at <span class="gray-background">1</span>, <span class="gray-background">2</span>, and <span class="gray-background">3</span>. (The required library is included with the Arduino IDE.)</p><p>Once you’ve uploaded the sketch, open the Serial Monitor window and wait about 30 seconds. You should see data similar to that shown in <a class="xref" href="ch20.html#example_output_from_listing_20-1" title="Figure 20-4. Example output from Example 20-1">Figure 20-4</a>.</p><p>You’re looking for messages that start with <code class="literal">+SIND:</code> because they tell you about the status of the GSM module and its connection with the network. If your messages end with <code class="literal">+SIND: 4</code>, your shield has found and connected to the network, and you can move on to Project 63. However, if your messages end with a <code class="literal">+SIND: 8</code>, change the frequency that the module uses, as described in the next section.</p><div class="figure"><a id="example_output_from_listing_20-1"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00301"/><img src="httpatomoreillycomsourcenostarchimages1630372.png.jpg" alt="Example output from"/></div></div><div class="figure-title">Figure 20-4. Example output from <a class="xref" href="ch20.html#gsm_shield_test_sketch" title="Example 20-1. GSM shield test sketch">Example 20-1</a></div></div></div><div class="sect2" title="Changing the Operating Frequency"><div class="titlepage"><div><div><h3 class="title" id="changing_the_operating_frequency">Changing the Operating Frequency</h3></div></div></div><p><a id="iddle1118" class="indexterm"/>To change your module’s operating frequency, follow these steps:</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Close the Arduino IDE and the Serial Monitor. Then load the terminal software used for Project 48.</p></li><li class="listitem"><p>Select the same COM port used by the Arduino board, and click <span class="strong"><strong>Connect</strong></span>.</p></li><li class="listitem"><p>Look up the frequency used by your cell network in <a class="xref" href="ch20.html#gsm_module_operating_bands" title="Table 20-1. GSM Module Operating Bands">Table 20-1</a>, and note the band number.</p><div class="table"><a id="gsm_module_operating_bands"/><div class="table-title">Table 20-1. GSM Module Operating Bands</div><div class="table-contents"><table style="border-collapse: collapse; border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; "><colgroup><col class="c1"/><col class="c2"/></colgroup><thead><tr><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>Frequency</p></td><td style="vertical-align: top; border-bottom: 0.5pt solid ; "><p>Band</p></td></tr></thead><tbody><tr><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>GSM 900 MHz</p></td><td style="vertical-align: top; border-bottom: 0.5pt solid ; "><p>0</p></td></tr><tr><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>DCS 1800 MHz</p></td><td style="vertical-align: top; border-bottom: 0.5pt solid ; "><p>1</p></td></tr><tr><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>PCS 1900 MHz</p></td><td style="vertical-align: top; border-bottom: 0.5pt solid ; "><p>2</p></td></tr><tr><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>GSM 850 MHz</p></td><td style="vertical-align: top; border-bottom: 0.5pt solid ; "><p>3</p></td></tr><tr><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>GSM 900 MHz and DCS 1800 MHz</p></td><td style="vertical-align: top; border-bottom: 0.5pt solid ; "><p>4</p></td></tr><tr><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>GSM 850 MHz and GSM 900 MHz</p></td><td style="vertical-align: top; border-bottom: 0.5pt solid ; "><p>5</p></td></tr><tr><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>GSM 850 MHz and DCS 1800 MHz</p></td><td style="vertical-align: top; border-bottom: 0.5pt solid ; "><p>6</p></td></tr><tr><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>GSM 850 MHz and PCS 1900 MHz</p></td><td style="vertical-align: top; border-bottom: 0.5pt solid ; "><p>7</p></td></tr><tr><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>GSM 900 MHz and PCS 1900 MHz</p></td><td style="vertical-align: top; border-bottom: 0.5pt solid ; "><p>8</p></td></tr><tr><td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; "><p>GSM 850 MHz, GSM 900 MHz, and DCS 1800 MHz</p></td><td style="vertical-align: top; border-bottom: 0.5pt solid ; "><p>9</p></td></tr><tr><td style="vertical-align: top; border-right: 0.5pt solid ; "><p>GSM 850 MHz, GSM 900 MHz, and PCS 1900 MHz</p></td><td style="vertical-align: top; "><p>10</p></td></tr></tbody></table></div></div></li><li class="listitem"><p>Enter the command <span class="strong"><strong><code class="literal">AT+SBAND?</code></strong></span> and press <span class="smaller">ENTER</span>. The module should reply with the current band settings, as shown in <a class="xref" href="ch20.html#example_band_interrogation" title="Figure 20-5. Example band interrogation">Figure 20-5</a>.</p><div class="figure"><a id="example_band_interrogation"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00302"/><img src="httpatomoreillycomsourcenostarchimages1630374.png.jpg" alt="Example band interrogation"/></div></div><div class="figure-title">Figure 20-5. Example band interrogation</div></div></li><li class="listitem"><p>To set the GSM module to the required band, enter the command <span class="strong"><strong><code class="literal">AT+SBAND=</code><span class="emphasis"><em><code class="literal">x</code></em></span></strong></span>, where <span class="bolditalic">x</span> is the band number selected from <a class="xref" href="ch20.html#gsm_module_operating_bands" title="Table 20-1. GSM Module Operating Bands">Table 20-1</a>. The shield should return <span class="emphasis"><em>OK</em></span>, as shown in <a class="xref" href="ch20.html#successful_band_change" title="Figure 20-6. Successful band change">Figure 20-6</a>.</p><div class="figure"><a id="successful_band_change"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00303"/><img src="httpatomoreillycomsourcenostarchimages1630376.png.jpg" alt="Successful band change"/></div></div><div class="figure-title">Figure 20-6. Successful band change</div></div></li><li class="listitem"><p>Finally, reset the Arduino and make sure that it connects to the network and displays <code class="literal">+SIND: 4</code>. Connect a jumper wire between the GND and RST pins on the Arduino for a second to trigger a reset, and the status codes should appear on the terminal screen, as shown in <a class="xref" href="ch20.html#successfully_connected_to_the_network" title="Figure 20-7. Successfully connected to the network">Figure 20-7</a>.</p><div class="figure"><a id="successfully_connected_to_the_network"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00304"/><img src="httpatomoreillycomsourcenostarchimages1630378.png.jpg" alt="Successfully connected to the network"/></div></div><div class="figure-title">Figure 20-7. Successfully connected to the network</div></div></li></ol></div><div class="note" title="Note"><h3 class="title"><a id="ch20note02"/>Note</h3><p><a id="iddle1114" class="indexterm"/><span class="emphasis"><em>You need to change the <code class="literal">SBAND</code> value only once, because the setting is stored in the GSM shield’s EEPROM. However, if you relocate and use a different cell network, you may have to change this value.</em></span></p></div><p>One final test is needed: Call your GSM shield using another telephone. If you have outgoing caller ID activated on the phone you’re calling from, the number should appear in the GSM shield output, as shown in <a class="xref" href="ch20.html#results_of_calling_the_gsm_shield" title="Figure 20-8. Results of calling the GSM shield">Figure 20-8</a>. (Note that your number will replace the 0452280886 number used in the figure.)</p><div class="figure"><a id="results_of_calling_the_gsm_shield"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00305"/><img src="httpatomoreillycomsourcenostarchimages1630380.png.jpg" alt="Results of calling the GSM shield"/></div></div><div class="figure-title">Figure 20-8. Results of calling the GSM shield</div></div><p>At this stage, you can be confident that everything is working as expected. Now on to the projects!</p></div></div><div class="sect1" title="Project #63: Building an Arduino Dialer"><div class="titlepage"><div><div><h2 class="title" style="clear: both" id="project_hash63_building_an_arduino_diale">Project #63: Building an Arduino Dialer</h2></div></div></div><p>By the end of this project, your Arduino will dial a telephone number when an event occurs, as determined by your Arduino sketch. For example, if the temperature in your storage freezer rises above a certain level or your burglar alarm system activates, you could have the Arduino call you from a preset number for 20 seconds and then hang up. Your phone’s caller ID will identify the phone number as the Arduino.</p><div class="sect2" title="The Hardware"><div class="titlepage"><div><div><h3 class="title" id="hardware-id00165">The Hardware</h3></div></div></div><p>This project uses the hardware described at the beginning of the chapter as well as any extra circuitry you choose for your application. For demonstration purposes, we’ll use a button to trigger the call.</p><p>In addition to the hardware already discussed, here’s what you’ll need to create this project:</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>One push button</p></li><li class="listitem"><p>One 10 kΩ resistor</p></li><li class="listitem"><p>One 100 nF capacitor</p></li><li class="listitem"><p>Various connecting wires</p></li><li class="listitem"><p>One breadboard</p></li></ul></div></div><div class="sect2" title="The Schematic"><div class="titlepage"><div><div><h3 class="title" id="schematic-id00166">The Schematic</h3></div></div></div><p>Connect the external circuitry, as shown in <a class="xref" href="ch20.html#schematic_for_project_63" title="Figure 20-9. Schematic for Project 63">Figure 20-9</a>.</p><div class="figure"><a id="schematic_for_project_63"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00306"/><img src="httpatomoreillycomsourcenostarchimages1630382.png.jpg" alt="Schematic for Project 63"/></div></div><div class="figure-title">Figure 20-9. Schematic for Project 63</div></div></div><div class="sect2" title="The Sketch"><div class="titlepage"><div><div><h3 class="title" id="sketch-id00167">The Sketch</h3></div></div></div><p>Enter <span class="emphasis"><em>but don’t upload</em></span> the following sketch:</p><a id="pro_id00176"/><pre class="programlisting">  //  Project 63 - Building an Arduino Dialer
+
+  #include &lt;SoftwareSerial.h&gt;
+  SoftwareSerial cell(2,3);
+
+  void setup()
+  {
+    pinMode(7, INPUT);
+    cell.begin(9600);
+<span class="gray-background">1</span>   delay(30000); // give the GSM module time to initialize network location
+  }
+
+<span class="gray-background">2</span> void callSomeone()
+  {
+<span class="gray-background">3</span>   cell.println("ATD<span class="emphasis"><em>xxxxxxxxxx</em></span>"); // dial the phone number <span class="emphasis"><em>xxxxxxxxxx</em></span>
+    // change <span class="emphasis"><em>xxxxxxxxxx</em></span> to your desired phone number (with area code)
+    delay(20000); // wait 20 seconds.
+    cell.println("ATH"); // end call
+    delay(60000); // wait 60 seconds for GSM module
+  }
+
+  void loop()
+  {
+    if (digitalRead(7) == HIGH)
+    {
+<span class="gray-background">4</span>     callSomeone();
+    }
+  }</pre></div><div class="sect2" title="How It Works"><div class="titlepage"><div><div><h3 class="title" id="how_it_works-id00168">How It Works</h3></div></div></div><p><a id="iddle1115" class="indexterm"/><a id="iddle1116" class="indexterm"/><a id="iddle1443" class="indexterm"/>The module is activated in <code class="literal">void setup</code>, and at <span class="gray-background">1</span> we give it some time to locate and register to the network. For our “event,” the Arduino monitors the button connected to digital pin 7. When this button is pressed, the function <code class="literal">callSomeone</code> is run at <span class="gray-background">2</span>. At <span class="gray-background">3</span>, the sketch sends the command to dial a telephone number.</p><p>You’ll replace <span class="emphasis"><em><code class="literal">xxxxxxxxxx</code></em></span> with the number you want your Arduino to call. Use the same dialing method that you’d use from your mobile phone. For example, if you wanted the Arduino to call 212.555.1212, you’d add this:</p><a id="pro_id00177"/><pre class="programlisting">cell.println("ATD2125551212");</pre><p>After you have entered the phone number, you can upload the sketch, wait a minute, and then test it by pressing the button. It’s very easy to integrate the dialing function into an existing sketch, because it’s simply called when required at <span class="gray-background">4</span>. From here, it’s up to you to find a reason for your Arduino to dial a phone number.</p><p>Now let’s drag your Arduino into the 21st century by sending a text message.</p></div></div><div class="sect1" title="Project #64: Building an Arduino Texter"><div class="titlepage"><div><div><h2 class="title" style="clear: both" id="project_hash64_building_an_arduino_texte">Project #64: Building an Arduino Texter</h2></div></div></div><p>In this project, the Arduino will send a text message to another cell phone when an event occurs. To simplify the code, we’ll use the SerialGSM Arduino library, available from <span class="emphasis"><em><a class="ulink" href="https://github.com/meirm/SerialGSM/" target="_top">https://github.com/meirm/SerialGSM/</a></em></span>. After you’ve installed the library, restart the Arduino IDE.</p><p>The hardware you’ll need for this project is identical to that for Project 63.</p><div class="sect2" title="The Sketch"><div class="titlepage"><div><div><h3 class="title" id="sketch-id00169">The Sketch</h3></div></div></div><p>Enter the following sketch into the Arduino IDE, but <span class="emphasis"><em>don’t upload it</em></span> yet:</p><a id="pro_id00178"/><pre class="programlisting">  // Project 64 - Building an Arduino Texter
+
+  #include &lt;SerialGSM.h&gt;
+  #include &lt;SoftwareSerial.h&gt;
+<span class="gray-background">1</span> SerialGSM cell(2,3);
+
+  void setup()
+  {
+    pinMode(7, INPUT);
+    delay(30000); // wait for the GSM module
+    cell.begin(9600);
+  }
+
+  void textSomeone()
+  {
+    cell.Verbose(true); // used for debugging
+    cell.Boot();
+    cell.FwdSMS2Serial();
+<span class="gray-background">2</span>   cell.Rcpt("+<span class="emphasis"><em>xxxxxxxxxxx</em></span>");  // replace <span class="emphasis"><em>xxxxxxxxxxx</em></span> with the
+                                // recipient's cell number
+<span class="gray-background">3</span>   cell.Message("This is the contents of a text message");
+    cell.SendSMS();
+  }
+
+  void loop()
+  {
+<span class="gray-background">4</span>   if (digitalRead(7) == HIGH)
+    {
+      textSomeone();
+    }
+
+    if (cell.ReceiveSMS())
+    {
+      Serial.println(cell.Message());
+      cell.DeleteAllSMS();
+    }
+}</pre></div><div class="sect2" title="How It Works"><div class="titlepage"><div><div><h3 class="title" id="how_it_works-id00170">How It Works</h3></div></div></div><p>The GSM shield is set up as normal at <span class="gray-background">1</span> and in <code class="literal">void setup()</code>. Button presses are detected at <span class="gray-background">4</span>, and the function <code class="literal">textSomeone</code> is called. This simple function sends a text message to the cellular phone number stored at <span class="gray-background">2</span>.</p><p>Before uploading the sketch, replace <span class="emphasis"><em><code class="literal">xxxxxxxxxxx</code></em></span> with the recipient’s cellular phone number in international format: the country code, the area code, and the number, without any spaces or brackets. For example, to send a text to 212.555.1212 in the United States, you would store <code class="literal">+12125551212</code>.</p><p><a id="iddle1113" class="indexterm"/>The text message to be sent is stored at <span class="gray-background">3</span>. (Note that the maximum length for a message is 160 characters.)</p><p>After you have stored a sample text message and a destination number, upload the sketch, wait 30 seconds, and then press the button. In a moment, the message should arrive on the destination phone, as shown in <a class="xref" href="ch20.html#sample_text_message_being_received" title="Figure 20-10. Sample text message being received">Figure 20-10</a>.</p><div class="figure"><a id="sample_text_message_being_received"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00307"/><img src="httpatomoreillycomsourcenostarchimages1630384.png.jpg" alt="Sample text message being received"/></div></div><div class="figure-title">Figure 20-10. Sample text message being received</div></div><p>Project 64 can be integrated quite easily into other sketches, and various text messages could be sent by comparing data against a parameter with a <code class="literal">switch-case</code> function.</p><div class="note" title="Note"><h3 class="title"><a id="ch20note03"/>Note</h3><p><span class="emphasis"><em>Remember that the cost of text messages can add up quickly, so when you’re experimenting, be sure that you’re using an unlimited or prepaid calling plan.</em></span></p></div></div></div><div class="sect1" title="Project #65: Setting Up an SMS Remote Control"><div class="titlepage"><div><div><h2 class="title" style="clear: both" id="project_hash65_setting_up_an_sms_remote">Project #65: Setting Up an SMS Remote Control</h2></div></div></div><p>In this project you’ll control the digital output pins on your Arduino by sending a text message from your cell phone. You should be able to use your existing knowledge to add various devices to control. We’ll allow for four separate digital outputs, but you can control more or less as required.</p><p>To turn on or off four digital outputs (pins 10 through 13 in this example), you’d send a text message to your Arduino in the following format: <code class="literal">#a</code><span class="emphasis"><em><code class="literal">x</code></em></span><code class="literal">b</code><span class="emphasis"><em><code class="literal">x</code></em></span><code class="literal">c</code><span class="emphasis"><em><code class="literal">x</code></em></span><code class="literal">d</code><span class="emphasis"><em><code class="literal">x</code></em></span>, replacing <span class="emphasis"><em><code class="literal">x</code></em></span> with either a <code class="literal">0</code> for off or a <code class="literal">1</code> for on. For example, to turn on all four outputs, you’d send <code class="literal">#a1b1c1d1</code>.</p><div class="sect2" title="The Hardware"><div class="titlepage"><div><div><h3 class="title" id="hardware-id00171">The Hardware</h3></div></div></div><p>This project uses the hardware described at the start of the chapter, plus any extra circuitry you choose. We’ll use four LEDs to indicate the status of the digital outputs being controlled. Therefore, the following extra hardware is required:</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>Four LEDs</p></li><li class="listitem"><p>Four 560 Ω resistors</p></li><li class="listitem"><p>Various connecting wires</p></li><li class="listitem"><p>One breadboard</p></li></ul></div></div><div class="sect2" title="The Schematic"><div class="titlepage"><div><div><h3 class="title" id="schematic-id00172">The Schematic</h3></div></div></div><p>Connect the external circuitry, as shown in <a class="xref" href="ch20.html#circuitry_for_project_65" title="Figure 20-11. Circuitry for Project 65">Figure 20-11</a>.</p><div class="figure"><a id="circuitry_for_project_65"/><div class="figure-contents"><div class="mediaobject"><a id="med_id00308"/><img src="httpatomoreillycomsourcenostarchimages1630386.png.jpg" alt="Circuitry for Project 65"/></div></div><div class="figure-title">Figure 20-11. Circuitry for Project 65</div></div></div><div class="sect2" title="The Sketch"><div class="titlepage"><div><div><h3 class="title" id="sketch-id00173">The Sketch</h3></div></div></div><p>Enter and upload the following sketch:</p><a id="pro_id00179"/><pre class="programlisting">  // Project 65 - Setting Up an SMS Remote Control
+
+  #include &lt;SoftwareSerial.h&gt;
+  SoftwareSerial cell(2,3);
+  char inchar;
+
+  void setup()
+  {
+    // set up digital output pins to control
+    pinMode(10, OUTPUT);
+    pinMode(11, OUTPUT);
+    pinMode(12, OUTPUT);
+    pinMode(13, OUTPUT);
+
+    digitalWrite(10, LOW); // default state for I/O pins at power-up or reset,
+    digitalWrite(11, LOW); // change as you wish.
+    digitalWrite(12, LOW);
+    digitalWrite(13, LOW);
+
+    //Initialize the GSM module serial port for communication.
+    cell.begin(9600);
+    delay(30000);
+<span class="gray-background">1</span>   cell.println("AT+CMGF=1");
+    delay(200);
+<span class="gray-background">2</span>   cell.println("AT+CNMI=3,3,0,0");
+    delay(200);
+  }
+
+  void loop()
+  {
+    // If a character comes in from the cellular module...
+<span class="gray-background">3</span>   if(cell.available() &gt; 0)
+    {
+      inchar = cell.read();
+<span class="gray-background">4</span>     if (inchar == '#') // the start of our command
+      {
+        delay(10);
+        inchar = cell.read();
+<span class="gray-background">5</span>       if (inchar == 'a')
+        {
+          delay(10);
+          inchar = cell.read();
+          if (inchar == '0')
+          {
+            digitalWrite(10, LOW);
+          }
+          else if (inchar == '1')
+          {
+            digitalWrite(10, HIGH);
+          }
+          delay(10);
+          inchar = cell.read();
+          if (inchar == 'b')
+          {
+            inchar = cell.read();
+            if (inchar == '0')
+            {
+              digitalWrite(11, LOW);
+            }
+            else if (inchar == '1')
+            {
+              digitalWrite(11, HIGH);
+            }
+            delay(10);
+            inchar = cell.read();
+            if (inchar == 'c')
+            {
+              inchar = cell.read();
+              if (inchar == '0')
+              {
+                digitalWrite(12, LOW);
+              }
+              else if (inchar == '1')
+              {
+                digitalWrite(12, HIGH);
+              }
+              delay(10);
+              inchar = cell.read();
+              if (inchar == 'd')
+              {
+                delay(10);
+                inchar = cell.read();
+                if (inchar == '0')
+                {
+                  digitalWrite(13, LOW);
+                }
+                else if (inchar == '1')
+                {
+                  digitalWrite(13, HIGH);
+                }
+                delay(10);
+              }
+            }
+            cell.println("AT+CMGD=1,4"); // delete all SMS
+          }
+        }
+      }
+    }
+  }</pre></div><div class="sect2" title="How It Works"><div class="titlepage"><div><div><h3 class="title" id="how_it_works-id00174">How It Works</h3></div></div></div><p>In this project the Arduino monitors every text character sent from the GSM module. Thus, at <span class="gray-background">1</span> we tell the GSM shield to convert incoming SMS messages to text and send the contents to the virtual serial port at <span class="gray-background">2</span>. Next, the Arduino simply waits for a text message to come from the GSM shield at <span class="gray-background">3</span>.</p><p>Because the commands sent from the cell phone and passed by the GSM module to control pins on the Arduino start with a <code class="literal">#</code>, the sketch waits for a hash mark (<code class="literal">#</code>) to appear in the text message at <span class="gray-background">4</span>. At <span class="gray-background">5</span>, the first output parameter <code class="literal">a</code> is checked—if it is followed by a <code class="literal">0</code> or <code class="literal">1</code>, the pin is turned off or on, respectively. The process repeats for the next three outputs controlled by <code class="literal">b</code>, <code class="literal">c</code>, and <code class="literal">d</code>.</p><p>Imagine how easy it would be to use this project to create a remote control for all manner of things, such as lights, pumps, alarms, and more.</p></div></div><div class="sect1" title="Looking Ahead"><div class="titlepage"><div><div><h2 class="title" style="clear: both" id="looking_ahead-id00175">Looking Ahead</h2></div></div></div><p>With the three projects in this chapter, you’ve created a great framework on which to build your own projects that can communicate over a cell network. You’re limited only by your imagination—for example, you could receive a text message if your basement floods or turn on your air conditioner from your cell phone. Once again, remember to take heed of network charges before setting your projects free.</p><p>At this point, after having read about (and hopefully built) the 65 projects in this book, you should have the understanding, knowledge, and confidence you need to create your own Arduino-based projects. You know the basic building blocks used to create many projects, and I’m sure you will be able to apply the technology to solve all sorts of problems and have fun at the same time.</p><p>This is only the beginning. You can find many more forms of hardware to work with, and with some thought and planning, you can work with them all. You’ll find a huge community of Arduino users on the Internet (in such places as the Arduino forum at <span class="emphasis"><em><a class="ulink" href="http://arduino.cc/forum/" target="_top">http://arduino.cc/forum/</a></em></span>) and even at a local hackerspace or club.</p><p>So don’t just sit there—make something!</p></div></section></body></html>
