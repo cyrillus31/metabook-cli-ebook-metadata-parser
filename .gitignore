@@ -4,9 +4,9 @@ __pycache__/
 *$py.class
 
 #EBooks
-**/Books/
-*.epub
-*.fb2
+# **/Books/
+# *.epub
+# *.fb2
 
 # C extensions
 *.so

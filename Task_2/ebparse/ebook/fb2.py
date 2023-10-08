@@ -36,7 +36,7 @@ class FB2_book(Ebook):
                 tag = title_info_child.tag
                 if "author" in tag:
                     self.metadata.author = " ".join(
-                        (string.text for string in title_info_child.iter())
+                        (string.text if string.text is not None else "" for string in title_info_child.iter())
                     ).strip()
                 elif "book-title" in tag:
                     self.metadata.title = title_info_child.text
