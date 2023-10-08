@@ -3,6 +3,11 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+#EBooks
+**/Books/
+*.epub
+*.fb2
+
 # C extensions
 *.so
 
