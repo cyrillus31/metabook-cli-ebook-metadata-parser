@@ -3,7 +3,12 @@ from dataclasses import dataclass
 import os
 import shutil
 import xml.etree.ElementTree as ET
-from exceptions import NotEbookError, OPFNotFoundError
+
+
+from exceptions import NotEbookError, OPFNotFoundError, ExtNotSupportedError, UnexpectedXMLStructureError
+
+
+
 
 
 @dataclass
@@ -97,5 +102,76 @@ class EPUB_book(Ebook):
             elif "date" in tag:
                 meta.date_published = text
 
-        return meta
+        self.metadata = meta
+        return self.metadata
+
+
+class FB2_book(Ebook):
+    def __init__(self, absolute_path: str) -> None:
+        self.ebook_path = absolute_path
+        self.namespace = "{http://www.gribuser.ru/xml/fictionbook/2.0}"
+        self.meta = BookMetaData()
+
+    def __enter__(self) -> Ebook:
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        pass
+
+    def get_metadata(self) -> BookMetaData:
+
+        tree = ET.parse(self.ebook_path)
+        root = tree.getroot()
+        description = root.find(f"{self.namespace}description")
+        if not description:
+            raise UnexpectedXMLStructureError
+
+        title_info = description.find(f"{self.namespace}title-info")
+        publish_info = description.find((f"{self.namespace}publish-info"))
+
+
+        for title_info_child in title_info.iter():
+            tag = title_info_child.tag
+            if "author" in tag:
+                self.meta.author = " ".join((string.text for string in title_info_child.iter())).strip()
+            elif "title" in tag:
+                self.title = title_info_child.text
+
+        for publish_info_child in publish_info.iter():
+            tag = publish_info_child.tag
+            if "publisher" in tag:
+                self.meta.publisher = publish_info_child.text
+            elif "year" in tag:
+                self.meta.date_published = publish_info_child.text
+
+
+        # author = " ".join([name_part.text for name_part in title_info.find(f"{self.namespace}author")])
+        # title = title_info.find(f"{self.namespace}book-title").text
+        # publisher = publish_info.find(f"{self.namespace}publisher").text
+        # date_published = publish_info.find(f"{self.namespace}year").text
+
+        # meta.author = author
+        # meta.title = title
+        # meta.publisher = publisher
+        # meta.date_published = date_published
+        
+
+        return self.meta
+
+
+EXTENSIONS = {
+        ".epub": EPUB_book,
+        ".fb2": FB2_book,
+        }
+
+def ebook_factory(file_path: str) -> Ebook:
+    rest, extension = os.path.splitext(file_path)
+    if extension in EXTENSIONS:
+        return EXTENSIONS[extension](file_path)
+    raise ExtNotSupportedError(extension)
+
+
+
+
+
 
