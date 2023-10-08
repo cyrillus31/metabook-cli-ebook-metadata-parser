@@ -1,5 +1,6 @@
 from ebook import Ebook, BookMetaData
 
+
 class EbookParser:
     def __init__(self) -> None:
         pass
