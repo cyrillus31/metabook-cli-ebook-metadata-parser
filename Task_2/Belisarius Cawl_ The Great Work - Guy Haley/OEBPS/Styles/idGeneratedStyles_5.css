@@ -1,0 +1,29 @@
+p.BREAK_Aquila_Legend {
+	
+	font-family:Times, serif;
+	font-size:0.833em;
+	font-style:normal;
+	font-variant:normal;
+	font-weight:bold;
+	line-height:1.2;
+	margin-bottom:14px;
+	margin-left:0;
+	margin-right:0;
+	margin-top:85px;
+	orphans:1;
+	page-break-after:auto;
+	page-break-before:auto;
+	text-align:center;
+	text-decoration:none;
+	text-indent:0;
+	text-transform:uppercase;
+	widows:1;
+}
+img._idGenObjectAttribute-1 {
+	height:37px;
+	width:100px;
+}
+div._idGenObjectStyleOverride-1 {
+/*CL Release*/
+	border-width:0px;
+}

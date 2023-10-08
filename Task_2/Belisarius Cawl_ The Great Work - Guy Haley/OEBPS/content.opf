@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package version="2.0" unique-identifier="bookid" xmlns="http://www.idpf.org/2007/opf">
+  <metadata xmlns:opf="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <meta content="Adobe InDesign 14.0.1" name="generator" />
+    <dc:title>Belisarius Cawl: The Great Work</dc:title>
+    <dc:creator>Guy Haley</dc:creator>
+    <dc:subject />
+    <dc:description />
+    <dc:publisher />
+    <dc:date>2019-08-01T11:55:51Z</dc:date>
+    <dc:source />
+    <dc:relation />
+    <dc:coverage />
+    <dc:rights>Copyright © 2019 Games Workshop Ltd.</dc:rights>
+    <dc:language>en-GB</dc:language>
+    <dc:language>en-US</dc:language>
+    <dc:identifier>9781789997187</dc:identifier>
+    <meta name="cover" content="Belisarius-Cawl-The-Great-Work-Cover8001228.jpg" />
+    <dc:identifier id="bookid">urn:uuid:84AD9F6F-7F69-432A-A05E-D8A5C1945A70</dc:identifier>
+    <meta content="0.9.14" name="Sigil version" />
+    <dc:date xmlns:opf="http://www.idpf.org/2007/opf" opf:event="modification">2019-09-21</dc:date>
+  </metadata>
+  <manifest>
+    <item id="cover" href="Text/cover.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x01-Cover-1" href="Text/01-Cover-1.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x02-40k-Backlist" href="Text/02-40k-Backlist.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x03-Generic-BL-advert" href="Text/03-Generic-BL-advert.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x04-TOC" href="Text/04-TOC.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x05-Title-Page" href="Text/05-Title-Page.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x06-40k-Legend" href="Text/06-40k-Legend.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x08-40k-Content" href="Text/08-40k-Content.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x08-40k-Content-1" href="Text/08-40k-Content-1.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x08-40k-Content-2" href="Text/08-40k-Content-2.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x08-40k-Content-3" href="Text/08-40k-Content-3.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x08-40k-Content-4" href="Text/08-40k-Content-4.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x08-40k-Content-5" href="Text/08-40k-Content-5.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x08-40k-Content-6" href="Text/08-40k-Content-6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x08-40k-Content-7" href="Text/08-40k-Content-7.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x08-40k-Content-8" href="Text/08-40k-Content-8.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x08-40k-Content-9" href="Text/08-40k-Content-9.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x08-40k-Content-10" href="Text/08-40k-Content-10.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x08-40k-Content-11" href="Text/08-40k-Content-11.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x08-40k-Content-12" href="Text/08-40k-Content-12.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x08-40k-Content-13" href="Text/08-40k-Content-13.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x08-40k-Content-14" href="Text/08-40k-Content-14.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x08-40k-Content-15" href="Text/08-40k-Content-15.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x08-40k-Content-16" href="Text/08-40k-Content-16.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x08-40k-Content-17" href="Text/08-40k-Content-17.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x08-40k-Content-18" href="Text/08-40k-Content-18.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x08-40k-Content-19" href="Text/08-40k-Content-19.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x08-40k-Content-20" href="Text/08-40k-Content-20.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x08-40k-Content-21" href="Text/08-40k-Content-21.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x08-40k-Content-22" href="Text/08-40k-Content-22.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x08-40k-Content-23" href="Text/08-40k-Content-23.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x08-40k-Content-24" href="Text/08-40k-Content-24.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x08-40k-Content-25" href="Text/08-40k-Content-25.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x08-40k-Content-26" href="Text/08-40k-Content-26.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x08-40k-Content-27" href="Text/08-40k-Content-27.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x10-Guy-Haley" href="Text/10-Guy-Haley.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x13-Extract" href="Text/13-Extract.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x13-Extract-1" href="Text/13-Extract-1.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x15-Newsletter-ad-2019-40K" href="Text/15-Newsletter-ad-2019-40K.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x16-System-advert-WH40K" href="Text/16-System-advert-WH40K.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x17-40k-Legal" href="Text/17-40k-Legal.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x18-eBook-license" href="Text/18-eBook-license.xhtml" media-type="application/xhtml+xml"/>
+    <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
+    <item id="idGeneratedStyles_0.css" href="Styles/idGeneratedStyles_0.css" media-type="text/css"/>
+    <item id="idGeneratedStyles_1.css" href="Styles/idGeneratedStyles_1.css" media-type="text/css"/>
+    <item id="idGeneratedStyles_2.css" href="Styles/idGeneratedStyles_2.css" media-type="text/css"/>
+    <item id="idGeneratedStyles_3.css" href="Styles/idGeneratedStyles_3.css" media-type="text/css"/>
+    <item id="idGeneratedStyles_4.css" href="Styles/idGeneratedStyles_4.css" media-type="text/css"/>
+    <item id="idGeneratedStyles_5.css" href="Styles/idGeneratedStyles_5.css" media-type="text/css"/>
+    <item id="idGeneratedStyles_6.css" href="Styles/idGeneratedStyles_6.css" media-type="text/css"/>
+    <item id="idGeneratedStyles_7.css" href="Styles/idGeneratedStyles_7.css" media-type="text/css"/>
+    <item id="idGeneratedStyles_8.css" href="Styles/idGeneratedStyles_8.css" media-type="text/css"/>
+    <item id="idGeneratedStyles_9.css" href="Styles/idGeneratedStyles_9.css" media-type="text/css"/>
+    <item id="idGeneratedStyles_10.css" href="Styles/idGeneratedStyles_10.css" media-type="text/css"/>
+    <item id="idGeneratedStyles_11.css" href="Styles/idGeneratedStyles_11.css" media-type="text/css"/>
+    <item id="idGeneratedStyles_12.css" href="Styles/idGeneratedStyles_12.css" media-type="text/css"/>
+    <item id="x2019_02-ENG-BL-Products.jpg" href="Images/2019_02-ENG-BL-Products.jpg" media-type="image/jpeg"/>
+    <item id="Belisarius-Cawl-The-Great-Work-Cover8001228.jpg" href="Images/Belisarius-Cawl-The-Great-Work-Cover8001228.jpg" media-type="image/jpeg"/>
+    <item id="Belisarius-Cawl-The-Great-Work-Cover80012281.jpg" href="Images/Belisarius-Cawl-The-Great-Work-Cover80012281.jpg" media-type="image/jpeg"/>
+    <item id="Belisarius-Cawl-tp.jpg" href="Images/Belisarius-Cawl-tp.jpg" media-type="image/jpeg"/>
+    <item id="BL-Ad-2017-WH40K.jpg" href="Images/BL-Ad-2017-WH40K.jpg" media-type="image/jpeg"/>
+    <item id="Newsletter-ad-2019-40K.jpg" href="Images/Newsletter-ad-2019-40K.jpg" media-type="image/jpeg"/>
+    <item id="Rites-of-Passage-Extract.jpg" href="Images/Rites-of-Passage-Extract.jpg" media-type="image/jpeg"/>
+    <item id="WH40K-Eagle-Black-CMYK.jpg" href="Images/WH40K-Eagle-Black-CMYK.jpg" media-type="image/jpeg"/>
+  </manifest>
+  <spine toc="ncx">
+    <itemref idref="cover" linear="no"/>
+    <itemref idref="x01-Cover-1"/>
+    <itemref idref="x02-40k-Backlist"/>
+    <itemref idref="x03-Generic-BL-advert"/>
+    <itemref idref="x04-TOC"/>
+    <itemref idref="x05-Title-Page"/>
+    <itemref idref="x06-40k-Legend"/>
+    <itemref idref="x08-40k-Content"/>
+    <itemref idref="x08-40k-Content-1"/>
+    <itemref idref="x08-40k-Content-2"/>
+    <itemref idref="x08-40k-Content-3"/>
+    <itemref idref="x08-40k-Content-4"/>
+    <itemref idref="x08-40k-Content-5"/>
+    <itemref idref="x08-40k-Content-6"/>
+    <itemref idref="x08-40k-Content-7"/>
+    <itemref idref="x08-40k-Content-8"/>
+    <itemref idref="x08-40k-Content-9"/>
+    <itemref idref="x08-40k-Content-10"/>
+    <itemref idref="x08-40k-Content-11"/>
+    <itemref idref="x08-40k-Content-12"/>
+    <itemref idref="x08-40k-Content-13"/>
+    <itemref idref="x08-40k-Content-14"/>
+    <itemref idref="x08-40k-Content-15"/>
+    <itemref idref="x08-40k-Content-16"/>
+    <itemref idref="x08-40k-Content-17"/>
+    <itemref idref="x08-40k-Content-18"/>
+    <itemref idref="x08-40k-Content-19"/>
+    <itemref idref="x08-40k-Content-20"/>
+    <itemref idref="x08-40k-Content-21"/>
+    <itemref idref="x08-40k-Content-22"/>
+    <itemref idref="x08-40k-Content-23"/>
+    <itemref idref="x08-40k-Content-24"/>
+    <itemref idref="x08-40k-Content-25"/>
+    <itemref idref="x08-40k-Content-26"/>
+    <itemref idref="x08-40k-Content-27"/>
+    <itemref idref="x10-Guy-Haley"/>
+    <itemref idref="x13-Extract"/>
+    <itemref idref="x13-Extract-1"/>
+    <itemref idref="x15-Newsletter-ad-2019-40K"/>
+    <itemref idref="x16-System-advert-WH40K"/>
+    <itemref idref="x17-40k-Legal"/>
+    <itemref idref="x18-eBook-license"/>
+  </spine>
+  <guide>
+    <reference type="cover" title="Cover" href="Text/cover.xhtml"/>
+    <reference type="toc" title="Table of Contents" href="Text/04-TOC.xhtml#_idContainer004"/>
+  </guide>
+</package>

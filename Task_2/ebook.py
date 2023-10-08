@@ -15,8 +15,6 @@ from exceptions import (
 
 @dataclass
 class BookMetaData:
-    verbose: bool 
-
     title: str | None = None
     author: str | None = None
     publisher: str | None = None
@@ -24,9 +22,9 @@ class BookMetaData:
     description: str | None = None
     language: str | None = None
 
+    verbose: bool = False
 
     def __str__(self):
-        print('whooo', self.verbose)
         if not self.verbose:
             return f"""
 Title: {self.title}
@@ -39,8 +37,8 @@ Title: {self.title}
 Author: {self.author}
 Publisher: {self.publisher}
 Date published: {self.date_published}
-Description: {self.description}
 Language: {self.language}
+Description: {self.description}
 """
 
 
@@ -120,6 +118,11 @@ class EPUB_book(Ebook):
                 self.metadata.publisher = text
             elif "date" in tag:
                 self.metadata.date_published = text
+            elif "language" in tag:
+                self.metadata.language = text
+            elif "description" in tag:
+                self.metadata.description = text
+
 
         return self.metadata
 
@@ -155,6 +158,11 @@ class FB2_book(Ebook):
                 ).strip()
             elif "book-title" in tag:
                 self.metadata.title = title_info_child.text
+            elif "annotation" in tag:
+                self.metadata.description = "".join(title_info_child.itertext())
+            elif ("lang" in tag) and ("src-lang" not in tag):
+                self.metadata.language = title_info_child.text.strip()
+
 
         for publish_info_child in publish_info.iter():
             tag = publish_info_child.tag
@@ -170,6 +178,7 @@ EXTENSIONS = {
     ".epub": EPUB_book,
     ".fb2": FB2_book,
 }
+
 
 def ebook_factory(file_path: str, verbose: bool = False) -> Ebook:
     _, extension = os.path.splitext(file_path)
