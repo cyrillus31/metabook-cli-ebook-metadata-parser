@@ -1,10 +1,10 @@
 from setuptools import setup
 
 setup(
-    name="ebparse",
+    name="metabook",
     version="0.1",
-    py_modules=['ebparse'],
-    entry_points={"console_script": ["ebparse=ebparse"]},
+    py_modules=['metabook'],
+    entry_points={"console_script": ["metabook=metabook"]},
     install_requires=["argparse"],
     author="Kirill Fedtsov",
     author_email="kirill.olegovich31@gmail.com",
