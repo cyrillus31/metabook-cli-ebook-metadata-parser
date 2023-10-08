@@ -9,7 +9,8 @@ from cli import get_cli_arguments
 
 
 if __name__ == "__main__":
-    files = get_cli_arguments()
+    args = get_cli_arguments()
+    files = args.filename
     ebook_parser = EbookParser()
     for file in files:
         ebook = ebook_factory(file)

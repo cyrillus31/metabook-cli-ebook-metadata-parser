@@ -20,8 +20,7 @@ def get_cli_arguments():
     # argparser.add_argument("-v", "--verbose", help="Displays additional information", required=False)
     
     args = argparser.parse_args()
-    files = args.filename
-    return files
+    return args
 
 # print(files)
 

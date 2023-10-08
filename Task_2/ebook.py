@@ -134,8 +134,8 @@ class FB2_book(Ebook):
             tag = title_info_child.tag
             if "author" in tag:
                 self.meta.author = " ".join((string.text for string in title_info_child.iter())).strip()
-            elif "title" in tag:
-                self.title = title_info_child.text
+            elif "book-title" in tag:
+                self.meta.title = title_info_child.text
 
         for publish_info_child in publish_info.iter():
             tag = publish_info_child.tag
