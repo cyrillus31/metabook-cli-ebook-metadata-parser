@@ -52,7 +52,6 @@ class EPUB_book(Ebook):
 
         tree = ET.parse(opf_path)
         root = tree.getroot()
-        # print(root.tag)
         metadata_xml = root.find(f"{self.namespace}metadata")
 
         if not metadata_xml:
