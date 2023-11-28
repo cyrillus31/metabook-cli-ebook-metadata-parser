@@ -42,6 +42,6 @@ cd take-home-weborama/metabook/
 К проекту прилагаются файлы для проверки работы программы:
 
 ```console
-python main.py ../../Books_examples/* --verbose
+python main.py ../Books_examples/* --verbose
 ```
 CLI инструмент может работать с абсолютными и относительными путями файлов и любым количеством аргументов.
