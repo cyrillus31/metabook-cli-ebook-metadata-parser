@@ -36,8 +36,8 @@ options:
 
 
 ```console
-git clone https://github.com/cyrillus31/take-home-weborama.git
-cd take-home-weborama/metabook/
+git clone https://github.com/cyrillus31/metabook-cli-ebook-metadata-parser.git
+cd metabook-cli-ebook-metadata-parser/metabook/
 ```
 К проекту прилагаются файлы для проверки работы программы:
 
